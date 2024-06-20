@@ -9,5 +9,18 @@ const authOptions: IAuthOptions = {
     password: ""
 }
 
-const documentStore = new DocumentStore("https://a.idovz.ravendb.community", "Users", authOptions)
+const documentStore = new DocumentStore(
+    process.env.SERVER_ADDRESS as string,
+    process.env.DATABASE_NAME as string, 
+    authOptions
+)
 documentStore.initialize()
+
+export async function getTest()
+{
+    const session = documentStore.openSession()
+    const test = await session.load("test")
+    session.saveChanges()
+
+    return test
+}

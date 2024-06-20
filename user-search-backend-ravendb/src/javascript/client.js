@@ -7,9 +7,11 @@ const authOptions = {
     type: "pfx",
     password: ""
 };
-const documentStore = new DocumentStore("https://a.idovz.ravendb.community", "Users", authOptions);
+const documentStore = new DocumentStore(process.env.SERVER_ADDRESS, process.env.DATABASE_NAME, authOptions);
 documentStore.initialize();
-const session = documentStore.openSession();
-const test = (await session.load("test"));
-console.log(test.test);
-session.saveChanges();
+export async function getTest() {
+    const session = documentStore.openSession();
+    const test = await session.load("test");
+    session.saveChanges();
+    return test;
+}
