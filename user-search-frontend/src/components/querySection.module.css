@@ -1,0 +1,23 @@
+#section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-end;
+    font-size: 1.5rem;
+}
+
+#input {
+    flex-grow: 2;
+    font-size: 1.5rem;
+}
+
+#button {
+    font-size: 1.5rem;
+}
+
+#timer {
+    width: fit-content;
+    margin: 0;
+    margin-left: 1rem;
+    flex-grow: 1;
+}

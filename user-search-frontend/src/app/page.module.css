@@ -1,31 +1,3 @@
 #main {
     padding-top: 1rem;
 }
-
-#querySection {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: end;
-    font-size: 1.5rem;
-    border: 1px solid grey;
-}
-
-#queryInput {
-    flex-grow: 2;
-    font-size: 1.5rem;
-    height: 2.5rem;
-    border: none;
-    outline: none;
-}
-
-#queryButton {
-    font-size: 1.5rem;
-    border: none;
-}
-
-#queryTimer {
-    width: fit-content;
-    margin: 0;
-    flex-grow: 1;
-}
