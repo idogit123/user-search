@@ -1,5 +1,5 @@
 #table {
-    margin-top: .5rem;
+    margin-top: 2rem;
     width: 100%;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     border-radius: .5rem;
@@ -20,4 +20,17 @@
     padding: 0 1rem;
     border-top: 1px solid grey;
     border-bottom: 1px solid grey;
+}
+
+#table tr:first-child {
+    border: none;
+}
+
+#table tr:nth-child(2) {
+    border-top: none;
+}
+
+#table tr:last-child {
+    border-bottom: none;
+    display: table-row;
 }
