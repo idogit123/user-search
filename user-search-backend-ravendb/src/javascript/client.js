@@ -1,9 +1,15 @@
-// import { DocumentStore } from "ravendb"
-// import { readFileSync } from "fs"
-// const authOptions = {
-//     certificate: readFileSync(process.env.CERTIFICATE_PATH as string)
-// }
+import { DocumentStore } from "ravendb";
+import { readFileSync } from "fs";
 import dotenv from "dotenv";
-dotenv.config();
-console.log(process.env.TEST);
-console.log("test");
+dotenv.config(); // to access enviroment variables
+const authOptions = {
+    certificate: readFileSync(process.env.CERTIFICATE_PATH),
+    type: "pfx",
+    password: ""
+};
+const documentStore = new DocumentStore("https://a.idovz.ravendb.community", "Users", authOptions);
+documentStore.initialize();
+const session = documentStore.openSession();
+const test = (await session.load("test"));
+console.log(test.test);
+session.saveChanges();
