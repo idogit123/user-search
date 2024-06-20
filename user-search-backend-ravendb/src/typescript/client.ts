@@ -11,10 +11,3 @@ const authOptions: IAuthOptions = {
 
 const documentStore = new DocumentStore("https://a.idovz.ravendb.community", "Users", authOptions)
 documentStore.initialize()
-
-const session = documentStore.openSession()
-
-const test = (await session.load("test")) as { test: boolean }
-console.log(test.test)
-
-session.saveChanges()
