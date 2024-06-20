@@ -12,10 +12,12 @@
   "license": "ISC",
   "description": "Backend of the user search app using RavenDB as a database.",
   "devDependencies": {
+    "@types/express": "^4.17.21",
     "typescript": "^5.5.2"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
+    "express": "^4.19.2",
     "ravendb": "^5.4.2"
   }
 }
