@@ -1,4 +1,4 @@
-import styles from './querySection.module.css'
+import styles from '@/styles/querySection.module.css'
 
 export default function QuerySection()
 {

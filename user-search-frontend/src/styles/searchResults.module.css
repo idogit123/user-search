@@ -1,0 +1,23 @@
+#table {
+    margin-top: .5rem;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: .5rem;
+    border-collapse: collapse;
+}
+
+#table th {
+    text-align: left;
+    padding: 1rem 1rem 0 1rem;
+    font-size: 1.25rem;
+}
+
+#table td {
+    padding: 1rem 1rem;
+}
+
+#table tr {
+    padding: 0 1rem;
+    border-top: 1px solid grey;
+    border-bottom: 1px solid grey;
+}

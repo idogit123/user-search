@@ -1,8 +1,8 @@
-import styles from './searchResults.module.css'
+import styles from '@/styles/searchResults.module.css'
 
 export default function SearchResults()
 {
-    return <table>
+    return <table id={styles.table}>
         <tr>
             <th>First Name</th>
             <th>Last Name</th>
