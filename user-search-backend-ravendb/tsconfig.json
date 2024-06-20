@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+      "target": "ES2022",
+      "module": "ES2022",      
+      "strict": true,
+      "skipLibCheck": true, 
+      "sourceMap": false,
+      "moduleResolution": "Bundler",
+      "allowSyntheticDefaultImports": true,
+      "esModuleInterop": true,
+      "outDir": "src/javascript"
+  },
+  "exclude": [
+      "node_modules/**"
+  ]
+}

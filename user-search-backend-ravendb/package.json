@@ -1,0 +1,21 @@
+{
+  "name": "user-search-backend-ravendb",
+  "version": "1.0.0",
+  "main": "src/javascript/client.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx tsc && node src/javascript/client.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Backend of the user search app using RavenDB as a database.",
+  "devDependencies": {
+    "typescript": "^5.5.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ravendb": "^5.4.2"
+  }
+}
