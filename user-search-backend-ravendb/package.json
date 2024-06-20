@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx tsc && node src/javascript/client.js"
+    "dev": "npx tsc && start node src/javascript/index.js",
+    "database": "start powershell -noexit \"& \"\"C:/Users/Ido Vitman Zilber/Documents/RavenDB Server/Node A/run.ps1\"\"\" "
   },
   "keywords": [],
   "author": "",
