@@ -1,4 +1,4 @@
-import { DocumentStore } from "ravendb";
+import { DocumentStore, QueryStatistics } from "ravendb";
 import { readFileSync } from "fs";
 import dotenv from "dotenv";
 import { User } from "./User.js";
@@ -11,11 +11,14 @@ const authOptions = {
 const documentStore = new DocumentStore(process.env.SERVER_ADDRESS, process.env.DATABASE_NAME, authOptions);
 documentStore.initialize();
 export async function getUsers(query) {
-    console.log('query: ', query);
+    let queryStats = new QueryStatistics();
     const session = documentStore.openSession();
     const users = await session.query(User)
         .search('firstName', query + '*')
+        .statistics(stats => queryStats = stats)
         .all();
-    session.saveChanges();
-    return users;
+    return {
+        users: users,
+        durationInMs: queryStats.durationInMs
+    };
 }

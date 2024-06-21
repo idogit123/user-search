@@ -15,10 +15,10 @@ app.use(
 )
 
 app.get('/users', async (req, res) => {
-    const users = await getUsers(req.query.query as string)
+    const queryResult = await getUsers(req.query.query as string)
     
     res.status(200).send(
-        users
+        queryResult
     )
 })
 

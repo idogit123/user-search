@@ -10,9 +10,7 @@ app.use(cors({
     origin: process.env.APP_ORIGIN
 }));
 app.get('/users', async (req, res) => {
-    console.log('fetched users');
-    const users = await getUsers(req.query.query);
-    users.forEach((user) => console.log(user.firstName));
-    res.status(200).send(users);
+    const queryResult = await getUsers(req.query.query);
+    res.status(200).send(queryResult);
 });
 app.listen(PORT, () => { console.log(`listening on port: ${PORT}`); });

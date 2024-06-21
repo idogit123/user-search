@@ -1,4 +1,4 @@
-import { DocumentStore, IAuthOptions } from "ravendb"
+import { DocumentStore, IAuthOptions, QueryStatistics } from "ravendb"
 import { readFileSync } from "fs"
 import dotenv from "dotenv"
 import { User } from "./User.js"
@@ -19,12 +19,16 @@ documentStore.initialize()
 
 export async function getUsers(query: string)
 {
+    let queryStats: QueryStatistics = new QueryStatistics()
+
     const session = documentStore.openSession()
     const users = await session.query<User>(User)
         .search('firstName', query + '*')
+        .statistics( stats => queryStats = stats )
         .all()
-        
-    session.saveChanges()
 
-    return users
+    return {
+        users: users,
+        durationInMs: queryStats.durationInMs
+    }
 }
