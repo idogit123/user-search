@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx tsc && start node src/javascript/index.js",
+    "dev": "npx tsc && node src/javascript/index.js",
     "database": "start powershell -noexit \"& \"\"C:/Users/Ido Vitman Zilber/Documents/RavenDB Server/Node A/run.ps1\"\"\" "
   },
   "keywords": [],
@@ -13,10 +13,12 @@
   "license": "ISC",
   "description": "Backend of the user search app using RavenDB as a database.",
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "typescript": "^5.5.2"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "ravendb": "^5.4.2"
