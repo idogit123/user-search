@@ -2,7 +2,7 @@
 
 import QuerySection from '@/components/QuerySection';
 import styles from './page.module.css'
-import SearchResults from '@/components/SearchResults';
+import QueryResults from '@/components/QueryResults';
 import { useState } from 'react';
 
 export default function Home() {
@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <main id={styles.main}>
       <QuerySection setQuery={(newValue: string) => setQuery(newValue)} />
-      <SearchResults query={query} />
+      <QueryResults query={query} />
     </main>
   );
 }
