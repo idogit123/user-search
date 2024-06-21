@@ -10,3 +10,4 @@ export class User {
         this.city = city
     }
 }
+
