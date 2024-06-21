@@ -9,6 +9,8 @@ const app = express()
 app.use( express.json() )
 
 app.get('/test', async (req, res) => {
+    console.log(req.query.query)
+
     res.status(200).send(
         await getTest()
     )

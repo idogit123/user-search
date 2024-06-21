@@ -2,9 +2,9 @@ import styles from '@/styles/querySection.module.css'
 
 async function testApi(formData: FormData) {
     "use server";
-    
+
     const response = await fetch(
-        "http://localhost:8080/test"
+        `http://localhost:8080/test?query=${formData.get('query')}`
     )
 
     console.log(await response.json())

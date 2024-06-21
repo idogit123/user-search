@@ -6,6 +6,7 @@ const PORT = process.env.API_PORT; // how to make it ready for production withou
 const app = express();
 app.use(express.json());
 app.get('/test', async (req, res) => {
+    console.log(req.query.query);
     res.status(200).send(await getTest());
 });
 app.listen(PORT, () => { console.log(`listening on port: ${PORT}`); });
