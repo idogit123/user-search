@@ -1,7 +1,7 @@
 import { DocumentStore } from "ravendb";
 import { readFileSync } from "fs";
-import { User } from "./User.js";
 import dotenv from "dotenv";
+import { User } from "./User.js";
 dotenv.config(); // to access enviroment variables
 const authOptions = {
     certificate: readFileSync(process.env.CERTIFICATE_PATH),
@@ -10,23 +10,12 @@ const authOptions = {
 };
 const documentStore = new DocumentStore(process.env.SERVER_ADDRESS, process.env.DATABASE_NAME, authOptions);
 documentStore.initialize();
-generateUsers();
-export async function getTest() {
+export async function getUsers(query) {
+    console.log('query: ', query);
     const session = documentStore.openSession();
-    const test = await session.load("test");
+    const users = await session.query(User)
+        .search('firstName', query + '*')
+        .all();
     session.saveChanges();
-    return test;
-}
-export async function generateUsers() {
-    const users = [
-        new User("Ido", "Vitman Zilber", "Binyamina"),
-        new User("Uri", "Vitman Zilber", "Binyamina"),
-        new User("Tamar", "Vitman Zilber", "Binyamina"),
-        new User("Hana", "Vitman", "Hamadia"),
-        new User("Ilana", "Zilber", "Tel-Aviv")
-    ];
-    const session = documentStore.openSession();
-    users.forEach(async (user) => await session.store(user));
-    await session.saveChanges();
-    console.log("Users generated");
+    return users;
 }

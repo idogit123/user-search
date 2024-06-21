@@ -1,18 +1,24 @@
 import express from "express"
+import cors from "cors"
 import dotenv from "dotenv"
-import { getTest } from "./client.js"
+import { getUsers } from "./client.js"
 dotenv.config()
 
 const PORT = process.env.API_PORT as string // how to make it ready for production without ports ???
 const app = express()
 
 app.use( express.json() )
+app.use(
+    cors({
+        origin: process.env.APP_ORIGIN
+    })
+)
 
-app.get('/test', async (req, res) => {
-    console.log(req.query.query)
-
+app.get('/users', async (req, res) => {
+    const users = await getUsers(req.query.query as string)
+    
     res.status(200).send(
-        await getTest()
+        users
     )
 })
 
