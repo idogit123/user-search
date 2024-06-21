@@ -10,7 +10,6 @@ async function getUsers(query: string, setQueryResult: (queryResult: QueryResult
   )
 
   const queryResult = (await response.json()) as QueryResult
-  console.log('duration: ', queryResult.durationInMs)
 
   setQueryResult( queryResult )
 }
@@ -24,8 +23,6 @@ export default function QueryResults(
         () => {
             if (query.length > 0)
                 getUsers(query, (queryResult) => setQueryResult(queryResult))
-
-
         },
         [query]
     )
