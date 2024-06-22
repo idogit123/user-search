@@ -1,5 +1,5 @@
 {
-  "name": "user-search-backend-ravendb",
+  "name": "backend-ravendb",
   "version": "1.0.0",
   "main": "src/javascript/client.js",
   "type": "module",
