@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "ravendb": "cd user-search-backend-ravendb && npm run database",
-    "ravendb-api": "cd user-search-backend-ravendb && npm run dev",
-    "ravendb-compile": "cd user-search-backend-ravendb && npx tsc",
-    "app": "cd user-search-frontend && npm run dev"
+    "ravendb": "cd backend-ravendb && npm run database",
+    "ravendb-api": "cd backend-ravendb && npm run dev",
+    "ravendb-compile": "cd backend-ravendb && npx tsc",
+    "app": "cd frontend && npm run dev"
   },
   "keywords": [],
   "author": "",
