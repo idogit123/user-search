@@ -24,5 +24,5 @@ app.get('/users', async (req, res) => {
 
 app.listen(
     PORT,
-    () => { console.log(`listening on port: ${PORT}`) }
+    () => { console.log(`ravendb client  listening on port: ${PORT}`) }
 )
