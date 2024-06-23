@@ -10,10 +10,14 @@ export async function getUsers(query) {
     const client = new MongoClient(databaseInfo.serverPath);
     const usersDB = client.db(databaseInfo.databaseName);
     const usersCollection = usersDB.collection(databaseInfo.collectionName);
-    const matchingUsers = await usersCollection.find({ firstName: { $regex: new RegExp("^" + query + ".*", "i") } }).toArray();
+    const usersQuery = usersCollection.find({
+        firstName: { $regex: new RegExp("^" + query + ".*", "i") }
+    });
+    const users = await usersQuery.toArray();
+    const stats = await usersQuery.explain("executionStats");
     client.close();
     return {
-        users: matchingUsers,
-        durationInMs: 123 // place-holder value
+        users: users,
+        durationInMs: stats.executionStats.executionStages.executionTimeMillisEstimate
     };
 }
