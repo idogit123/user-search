@@ -14,7 +14,7 @@ export async function getUsers(query) {
     let queryStats = new QueryStatistics();
     const session = documentStore.openSession();
     const users = await session.query(User)
-        .search('firstName', query + '*')
+        .whereStartsWith('firstName', query)
         .statistics(stats => queryStats = stats)
         .all();
     return {

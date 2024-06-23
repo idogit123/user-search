@@ -23,7 +23,7 @@ export async function getUsers(query: string)
 
     const session = documentStore.openSession()
     const users = await session.query<User>(User)
-        .search('firstName', query.toLowerCase() + '*')
+        .whereStartsWith('firstName', query)
         .statistics( stats => queryStats = stats )
         .all()
 

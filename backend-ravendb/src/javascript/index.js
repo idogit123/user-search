@@ -13,4 +13,4 @@ app.get('/users', async (req, res) => {
     const queryResult = await getUsers(req.query.query);
     res.status(200).send(queryResult);
 });
-app.listen(PORT, () => { console.log(`listening on port: ${PORT}`); });
+app.listen(PORT, () => { console.log(`ravendb client  listening on port: ${PORT}`); });

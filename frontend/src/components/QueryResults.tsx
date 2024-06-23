@@ -1,7 +1,6 @@
 import styles from '@/styles/searchResults.module.css'
 import UserRow from './UserRow'
 import { useEffect, useState } from 'react'
-import { User } from '@/types/User'
 import { QueryResult } from '@/types/QueryResult'
 
 async function getUsers(query: string, setQueryResult: (queryResult: QueryResult) => void) {
