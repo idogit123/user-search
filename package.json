@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "ravendb": "cd backend-ravendb && npm run database",
     "ravendb-api": "cd backend-ravendb && npm run dev",
-    "ravendb-compile": "cd backend-ravendb && npx tsc",
+    "mongodb": "start mongod",
+    "mongodb-api": "cd backend-mongodb && npm run dev",
     "app": "cd frontend && npm run dev"
   },
   "keywords": [],

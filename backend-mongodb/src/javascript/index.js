@@ -1,24 +1,16 @@
-import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
+import express from "express";
+import cors from "cors";
+import { getUsers } from "./client.js";
 dotenv.config();
-const databaseInfo = {
-    serverPath: process.env.SERVER_PATH,
-    databaseName: process.env.DATABASE_NAME,
-    collectionName: process.env.COLLECTION_NAME
-};
-async function testMongoDB() {
-    console.log(databaseInfo);
-    const client = new MongoClient(databaseInfo.serverPath);
-    const usersDB = client.db(databaseInfo.databaseName);
-    const users = usersDB.collection(databaseInfo.collectionName);
-    const test = await users.findOne({ test: true });
-    console.log(test?.test);
-    client.close();
-}
-class Test {
-    test;
-    constructor(test) {
-        this.test = test;
-    }
-}
-testMongoDB();
+const PORT = process.env.API_PORT; // how to make it ready for production without ports ???
+const app = express();
+app.use(express.json());
+app.use(cors({
+    origin: process.env.APP_ORIGIN
+}));
+app.get('/users', async (req, res) => {
+    const queryResult = await getUsers(req.query.query);
+    res.status(200).send(queryResult);
+});
+app.listen(PORT, () => { console.log(`mongodb client listening on port: ${PORT}`); });

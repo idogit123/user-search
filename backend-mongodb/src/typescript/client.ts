@@ -1,5 +1,7 @@
 import { MongoClient } from "mongodb"
 import { User } from "./User"
+import dotenv from "dotenv"
+dotenv.config()
 
 const databaseInfo = {
     serverPath:  process.env.SERVER_PATH  as string,
@@ -12,7 +14,16 @@ export async function getUsers(query: string) {
     const usersDB = client.db( databaseInfo.databaseName )
     const usersCollection = usersDB.collection<User>( databaseInfo.collectionName )
 
-    const test = await usersCollection.findOne<User>({ test: true })
-
+    const matchingUsers = await usersCollection.find<User>(
+        { 
+            firstName: { $regex: new RegExp("^" + query + ".*", "i") } 
+        }
+    ).toArray()
+    
     client.close()
+
+    return {
+        users: matchingUsers,
+        durationInMs: 123 // place-holder value
+    }
 }
