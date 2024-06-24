@@ -36,6 +36,7 @@ export async function getUsers(query: string, sort: string)
             .whereStartsWith('city', query)
             .statistics( stats => queryStats = stats )
             .orderBy(sort)
+            
     else 
         usersQuery = session.query<User>(User)
             .orderBy(sort)
