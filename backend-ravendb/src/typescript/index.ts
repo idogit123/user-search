@@ -17,7 +17,8 @@ app.use(
 app.get('/users', async (req, res) => {
     const queryResult = await getUsers(
         req.query.query as string, 
-        req.query.sort as string
+        req.query.sort as string,
+        req.query.isDescending as string
     )
     
     res.status(200).send(

@@ -20,7 +20,7 @@ documentStore.initialize()
 
 const timer = new Timer()
 
-export async function getUsers(query: string, sort: string)
+export async function getUsers(query: string, sort: string, isDescending: string)
 {
     let queryStats: QueryStatistics = new QueryStatistics()
 
@@ -35,11 +35,14 @@ export async function getUsers(query: string, sort: string)
             .orElse()
             .whereStartsWith('city', query)
             .statistics( stats => queryStats = stats )
-            .orderBy(sort)
             
     else 
         usersQuery = session.query<User>(User)
-            .orderBy(sort)
+
+    if (isDescending == "true")
+        usersQuery.orderByDescending(sort)
+    else 
+        usersQuery.orderBy(sort)
         
     timer.start()
     const users = await usersQuery.all()

@@ -12,7 +12,7 @@ const authOptions = {
 const documentStore = new DocumentStore(process.env.SERVER_ADDRESS, process.env.DATABASE_NAME, authOptions);
 documentStore.initialize();
 const timer = new Timer();
-export async function getUsers(query, sort) {
+export async function getUsers(query, sort, isDescending) {
     let queryStats = new QueryStatistics();
     const session = documentStore.openSession();
     let usersQuery;
@@ -23,11 +23,13 @@ export async function getUsers(query, sort) {
             .whereStartsWith('lastName', query)
             .orElse()
             .whereStartsWith('city', query)
-            .statistics(stats => queryStats = stats)
-            .orderBy(sort);
+            .statistics(stats => queryStats = stats);
     else
-        usersQuery = session.query(User)
-            .orderBy(sort);
+        usersQuery = session.query(User);
+    if (isDescending == "true")
+        usersQuery.orderByDescending(sort);
+    else
+        usersQuery.orderBy(sort);
     timer.start();
     const users = await usersQuery.all();
     timer.end();
