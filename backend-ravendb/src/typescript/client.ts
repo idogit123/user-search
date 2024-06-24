@@ -2,6 +2,7 @@ import { DocumentStore, IAuthOptions, QueryStatistics } from "ravendb"
 import { readFileSync } from "fs"
 import dotenv from "dotenv"
 import { User } from "./User.js"
+import { Timer } from "./Timer.js"
 dotenv.config() // to access enviroment variables
 
 const authOptions: IAuthOptions = {
@@ -17,22 +18,27 @@ const documentStore = new DocumentStore(
 )
 documentStore.initialize()
 
+const timer = new Timer()
+
 export async function getUsers(query: string)
 {
     let queryStats: QueryStatistics = new QueryStatistics()
 
     const session = documentStore.openSession()
-    const users = await session.query<User>(User)
+    const usersQuery = session.query<User>(User)
         .whereStartsWith('firstName', query)
         .orElse()
         .whereStartsWith('lastName', query)
         .orElse()
         .whereStartsWith('city', query)
         .statistics( stats => queryStats = stats )
-        .all()
+        
+    timer.start()
+    const users = await usersQuery.all()
+    timer.end()
 
     return {
         users: users,
-        durationInMs: queryStats.durationInMs
+        durationInMs: timer.getDuration()
     }
 }
