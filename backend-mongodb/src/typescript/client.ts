@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb"
 import { User } from "./User"
 import dotenv from "dotenv"
-import { Timer } from "./Timer"
+import { Timer } from "./Timer.js"
 dotenv.config()
 
 const databaseInfo = {

@@ -1,5 +1,6 @@
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
+import { Timer } from "./Timer.js";
 dotenv.config();
 const databaseInfo = {
     serverPath: process.env.SERVER_PATH,
@@ -8,6 +9,7 @@ const databaseInfo = {
 };
 const client = new MongoClient(databaseInfo.serverPath);
 const usersDB = client.db(databaseInfo.databaseName);
+const timer = new Timer();
 export async function getUsers(query) {
     const usersCollection = usersDB.collection(databaseInfo.collectionName);
     const usersQuery = usersCollection.find({
@@ -17,10 +19,11 @@ export async function getUsers(query) {
             { 'city': { $regex: new RegExp("^" + query, "i") } }
         ]
     });
+    timer.start();
     const users = await usersQuery.toArray();
-    const stats = await usersQuery.explain("executionStats");
+    timer.end();
     return {
         users: users,
-        durationInMs: stats.executionStats.executionStages.executionTimeMillisEstimate
+        durationInMs: timer.getDuration()
     };
 }
