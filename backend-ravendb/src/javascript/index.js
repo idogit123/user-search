@@ -10,7 +10,7 @@ app.use(cors({
     origin: process.env.APP_ORIGIN
 }));
 app.get('/users', async (req, res) => {
-    const queryResult = await getUsers(req.query.query);
+    const queryResult = await getUsers(req.query.query, req.query.sort);
     res.status(200).send(queryResult);
 });
 app.listen(PORT, () => { console.log(`ravendb client  listening on port: ${PORT}`); });
