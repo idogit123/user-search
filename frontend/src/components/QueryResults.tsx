@@ -3,9 +3,10 @@ import UserRow from './UserRow'
 import { useEffect, useState } from 'react'
 import { QueryResult } from '@/types/QueryResult'
 import { Query } from '@/types/Query'
+import SortButton from './SortButton'
 
 export default function QueryResults(
-    { query }: { query: Query }
+    { query, setQuery }: { query: Query, setQuery: Function }
 ) {
     const [queryResult, setQueryResult] = useState<QueryResult>()
 
@@ -21,8 +22,7 @@ export default function QueryResults(
 
     useEffect(
         () => {
-            if (query.query.length > 0)
-                getUsers()
+            getUsers()
         },
         [query]
     )
@@ -31,9 +31,18 @@ export default function QueryResults(
         <table id={styles.table}>
             <tbody>
                 <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>City</th>
+                    <th>
+                        <p>First Name</p> 
+                        <SortButton column="firstName" setQuery={setQuery}/> 
+                    </th>
+                    <th>
+                        <p>Last Name</p> 
+                        <SortButton column="lastName" setQuery={setQuery}/> 
+                    </th>
+                    <th>
+                        <p>City</p>
+                        <SortButton column="city" setQuery={setQuery}/> 
+                    </th>
                 </tr>
                 {
                 queryResult == null ? '' :

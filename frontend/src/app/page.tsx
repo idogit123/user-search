@@ -7,12 +7,12 @@ import { useState } from 'react';
 import { Query } from '@/types/Query';
 
 export default function Home() {
-  const [query, setQuery] = useState(new Query("", ""))
+  const [query, setQuery] = useState(new Query("", null))
 
   return (
     <main id={styles.main}>
-      <QueryForm setQuery={(newValue: Query) => setQuery(newValue)} />
-      <QueryResults query={query} />
+      <QueryForm setQuery={setQuery} />
+      <QueryResults query={query} setQuery={setQuery} />
     </main>
   );
 }

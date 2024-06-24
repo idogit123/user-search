@@ -42,3 +42,13 @@
     border-bottom: none;
     display: table-row;
 }
+
+#table p {
+    width: fit-content;
+    margin: 0;
+    display: inline;
+}
+
+#table tr button {
+    margin-left: .5rem;
+}
