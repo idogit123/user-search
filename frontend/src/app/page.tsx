@@ -1,16 +1,17 @@
 "use client";
 
-import QuerySection from '@/components/QueryForm';
+import QueryForm from '@/components/QueryForm';
 import styles from './page.module.css'
 import QueryResults from '@/components/QueryResults';
 import { useState } from 'react';
+import { Query } from '@/types/Query';
 
 export default function Home() {
-  const [query, setQuery] = useState("")
+  const [query, setQuery] = useState(new Query("", ""))
 
   return (
     <main id={styles.main}>
-      <QuerySection setQuery={(newValue: string) => setQuery(newValue)} />
+      <QueryForm setQuery={(newValue: Query) => setQuery(newValue)} />
       <QueryResults query={query} />
     </main>
   );

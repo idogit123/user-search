@@ -11,13 +11,10 @@
     font-size: 1.5rem;
 }
 
-#button {
+#select {
     font-size: 1.5rem;
 }
 
-#timer {
-    width: fit-content;
-    margin: 0;
-    margin-left: 1rem;
-    flex-grow: 1;
+#button {
+    font-size: 1.5rem;
 }
