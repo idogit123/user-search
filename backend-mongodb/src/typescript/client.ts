@@ -14,7 +14,7 @@ const client = new MongoClient( databaseInfo.serverPath )
 const usersDB = client.db( databaseInfo.databaseName )
 const timer = new Timer()
 
-export async function getUsers(query: string, sort: string) {
+export async function getUsers(query: string, sort: string, isDescending: string) {
     const usersCollection = usersDB.collection<User>( databaseInfo.collectionName )
 
     const usersQuery = usersCollection.find<User>(
@@ -25,7 +25,7 @@ export async function getUsers(query: string, sort: string) {
                 { 'city': { $regex: new RegExp("^" + query, "i") } }
             ]
         }
-    ).sort(sort)
+    ).sort(sort, isDescending == "true" ? -1 : 1)
     
     timer.start()
     const users = await usersQuery.toArray()

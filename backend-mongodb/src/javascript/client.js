@@ -10,7 +10,7 @@ const databaseInfo = {
 const client = new MongoClient(databaseInfo.serverPath);
 const usersDB = client.db(databaseInfo.databaseName);
 const timer = new Timer();
-export async function getUsers(query, sort) {
+export async function getUsers(query, sort, isDescending) {
     const usersCollection = usersDB.collection(databaseInfo.collectionName);
     const usersQuery = usersCollection.find({
         $or: [
@@ -18,7 +18,7 @@ export async function getUsers(query, sort) {
             { 'lastName': { $regex: new RegExp("^" + query, "i") } },
             { 'city': { $regex: new RegExp("^" + query, "i") } }
         ]
-    }).sort(sort);
+    }).sort(sort, isDescending == "true" ? -1 : 1);
     timer.start();
     const users = await usersQuery.toArray();
     timer.end();
