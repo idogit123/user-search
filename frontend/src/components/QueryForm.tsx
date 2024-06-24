@@ -1,6 +1,6 @@
 "use client"
 
-import styles from '@/styles/querySection.module.css'
+import styles from '@/styles/queryForm.module.css'
 
 export default function QuerySection({ setQuery }: { setQuery: (newValue: string) => void})
 {

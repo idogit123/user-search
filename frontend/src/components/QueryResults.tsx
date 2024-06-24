@@ -1,4 +1,4 @@
-import styles from '@/styles/searchResults.module.css'
+import styles from '@/styles/queryResults.module.css'
 import UserRow from './UserRow'
 import { useEffect, useState } from 'react'
 import { QueryResult } from '@/types/QueryResult'

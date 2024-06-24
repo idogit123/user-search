@@ -1,6 +1,6 @@
 "use client";
 
-import QuerySection from '@/components/QuerySection';
+import QuerySection from '@/components/QueryForm';
 import styles from './page.module.css'
 import QueryResults from '@/components/QueryResults';
 import { useState } from 'react';
