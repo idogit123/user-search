@@ -15,7 +15,10 @@ app.use(
 )
 
 app.get('/users', async (req, res) => {
-    const queryResult = await getUsers(req.query.query as string, req.query.sort as string)
+    const queryResult = await getUsers(
+        req.query.query as string, 
+        req.query.sort as string
+    )
     
     res.status(200).send(
         queryResult
