@@ -3,7 +3,7 @@ import UserRow from './UserRow'
 import { useEffect, useState } from 'react'
 import { QueryResult } from '@/types/QueryResult'
 import { Query } from '@/types/Query'
-import SortButton from './SortButton'
+import ColumnHeader from './ColumnHeader'
 
 export default function QueryResults(
     { query, setQuery }: { query: Query, setQuery: Function }
@@ -12,7 +12,7 @@ export default function QueryResults(
 
     async function getUsers() {
         const response = await fetch(
-            `http://localhost:8080/users?query=${query.query}&sort=${query.sort}`
+            `http://localhost:8080/users?query=${query.query}&sort=${query.sort}&isDescending=${query.isOrderDescending}`
         )
         
         const queryResult = (await response.json()) as QueryResult
@@ -31,18 +31,15 @@ export default function QueryResults(
         <table id={styles.table}>
             <tbody>
                 <tr>
-                    <th>
+                    <ColumnHeader column="firstName" setQuery={setQuery} query={query}>
                         <p>First Name</p> 
-                        <SortButton column="firstName" setQuery={setQuery}/> 
-                    </th>
-                    <th>
+                    </ColumnHeader>
+                    <ColumnHeader column="lastName" setQuery={setQuery} query={query}>
                         <p>Last Name</p> 
-                        <SortButton column="lastName" setQuery={setQuery}/> 
-                    </th>
-                    <th>
-                        <p>City</p>
-                        <SortButton column="city" setQuery={setQuery}/> 
-                    </th>
+                    </ColumnHeader>
+                    <ColumnHeader column="city" setQuery={setQuery} query={query}>
+                        <p>City</p> 
+                    </ColumnHeader>
                 </tr>
                 {
                 queryResult == null ? '' :

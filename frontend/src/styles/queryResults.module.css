@@ -20,6 +20,20 @@
     font-size: 1.25rem;
 }
 
+#table th[data-sort='down']::after {
+    content: '⬇️';
+    font-size: 1rem;
+    position: absolute;
+    margin-left: .5rem;
+}
+
+#table th[data-sort='up']::after {
+    content: '⬆️';
+    font-size: 1rem;
+    position: absolute;
+    margin-left: .5rem;
+}
+
 #table td {
     padding: 1rem 1rem;
 }
@@ -28,6 +42,7 @@
     padding: 0 1rem;
     border-top: 1px solid grey;
     border-bottom: 1px solid grey;
+    user-select: none;
 }
 
 #table tr:first-child {
@@ -47,8 +62,4 @@
     width: fit-content;
     margin: 0;
     display: inline;
-}
-
-#table tr button {
-    margin-left: .5rem;
 }
