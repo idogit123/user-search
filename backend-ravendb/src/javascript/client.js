@@ -15,6 +15,10 @@ export async function getUsers(query) {
     const session = documentStore.openSession();
     const users = await session.query(User)
         .whereStartsWith('firstName', query)
+        .orElse()
+        .whereStartsWith('lastName', query)
+        .orElse()
+        .whereStartsWith('city', query)
         .statistics(stats => queryStats = stats)
         .all();
     return {
