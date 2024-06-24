@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { Query } from '@/types/Query';
 
 export default function Home() {
-  const [query, setQuery] = useState(new Query("", null, false))
+  const [query, setQuery] = useState(new Query("", "firstName", false))
 
   return (
     <main id={styles.main}>
