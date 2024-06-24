@@ -1,3 +1,11 @@
+#timer {
+    font-size: 1.2rem;
+}
+
+#timer span {
+    font-weight: bold;
+}
+
 #table {
     margin-top: 2rem;
     width: 100%;
