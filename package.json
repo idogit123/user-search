@@ -9,7 +9,8 @@
     "ravendb-api": "cd backend-ravendb && npm run dev",
     "mongodb": "start mongod",
     "mongodb-api": "cd backend-mongodb && npm run dev",
-    "app": "cd frontend && npm run dev"
+    "app": "cd frontend && npm run dev",
+    "user-generator": "py user-generator/main.py"
   },
   "keywords": [],
   "author": "",
