@@ -1,5 +1,5 @@
-const { faker } = require('@faker-js/faker');
-const fs = require("fs");
+import { faker } from '@faker-js/faker'
+import { createWriteStream } from 'fs'
 
 function createRandomUser() {
     return {
@@ -24,23 +24,28 @@ function createRandomUser() {
     };
 }
 
-const writeStream = fs.createWriteStream('users.jsonl', { flags: 'w' });
+function createUsersJson(jsonPath, usersAmount)
+{
+    const writeStream = createWriteStream(jsonPath, { flags: 'w' });
 
-for (let i = 0; i < 1_000_000; i++) {
-    const user = createRandomUser();
-    writeStream.write(JSON.stringify(user)); 
-    writeStream.write('\n')
+    for (let i = 0; i < usersAmount; i++) {
+        const user = createRandomUser();
+        writeStream.write(JSON.stringify(user));
+        writeStream.write('\n')
 
-    if(i%100_000 == 0){
-        console.log(i);
+        if(i % (usersAmount / 100) == 0){
+            console.log('progress: ', parseInt(i/usersAmount * 100), '%')
+        }
     }
+
+    // Close the stream when done
+    writeStream.end(() => {
+        console.log('Users written to users.jsonl');
+    })
+
+    writeStream.on('error', (error) => {
+        console.log(error)
+    })
 }
 
-// Close the stream when done
-writeStream.end(() => {
-    console.log('Users written to users.jsonl');
-});
-
-writeStream.on('error', (error) => {
-    console.log(error)
-})
+createUsersJson('users.jsonl', 10_000_000)
