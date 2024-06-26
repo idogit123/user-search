@@ -28,6 +28,7 @@ export default function QueryResults(
     )
 
     return <>
+        <p id={styles.timer}>Completed in: <span>{queryResult?.durationInMs}</span>ms</p>
         <table id={styles.table}>
             <tbody>
                 <tr>
@@ -48,7 +49,6 @@ export default function QueryResults(
                 )}
             </tbody>
         </table>
-        <p id={styles.timer}>Completed in: <span>{queryResult?.durationInMs}</span>ms</p>
     </>
     
 }

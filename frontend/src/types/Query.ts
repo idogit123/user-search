@@ -1,7 +1,7 @@
 export class Query {
     query: string
     sort: string | null
-    isOrderDescending: boolean | null
+    isOrderDescending: boolean
 
     constructor(query: string, sort: string | null, isOrderDescending: boolean) {
         this.query = query

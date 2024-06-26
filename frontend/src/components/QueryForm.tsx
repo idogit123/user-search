@@ -13,13 +13,13 @@ export default function QueryForm({ setQuery }: { setQuery: Function})
         submitEvent.preventDefault()
 
         const formData = new FormData(submitEvent.currentTarget)
-        const queryValue = formData.get('query') as string | null
-        const query = new Query(
-            queryValue == null || queryValue.length == 0 ? "" : queryValue,
-            null
-        )
+        const newQuery = formData.get('query') as string | null
 
-        setQuery(query)
+        setQuery((oldQuery: Query) => new Query(
+            newQuery == null || newQuery.length == 0 ? "" : newQuery, 
+            oldQuery.sort, 
+            oldQuery.isOrderDescending
+        ))
     }
 
     return <form id={styles.form} onSubmit={ sendQuery } >
