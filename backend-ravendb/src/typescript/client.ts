@@ -1,8 +1,12 @@
 import { DocumentStore, IAuthOptions, IDocumentQuery, QueryStatistics } from "ravendb"
-import { readFileSync } from "fs"
+import { readFileSync, createReadStream } from "fs"
 import dotenv from "dotenv"
 import { User } from "./User.js"
 import { Timer } from "./Timer.js"
+import { createInterface } from "readline";
+
+import StreamArray from 'stream-json/streamers/StreamArray.js'
+import Stream from 'stream-json/Parser.js'
 dotenv.config() // to access enviroment variables
 
 const authOptions: IAuthOptions = {
@@ -35,7 +39,7 @@ export async function getUsers(query: string, sort: string, isDescending: string
             .orElse()
             .whereStartsWith('city', query)
             .statistics( stats => queryStats = stats )
-            
+
     else 
         usersQuery = session.query<User>(User)
 
@@ -53,3 +57,21 @@ export async function getUsers(query: string, sort: string, isDescending: string
         durationInMs: timer.getDuration()
     }
 }
+
+export async function bulkInsertUsers(filePath: string)
+{
+    const bulkInsert = documentStore.bulkInsert()
+    const reader = createInterface({
+        input: createReadStream(filePath),
+    });
+    
+    reader.on('line', async (line: string) => {
+        const user = JSON.parse(line)
+        await bulkInsert.store(user)
+    });
+
+    reader.on('close', async () => {
+        await bulkInsert.finish()
+    });
+}
+
