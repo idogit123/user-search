@@ -1,5 +1,5 @@
 import { createReadStream, ReadStream } from 'fs'
-import { BulkInsertOnProgressEventArgs, BulkInsertOperation } from 'ravendb'
+import { BulkInsertOperation } from 'ravendb'
 
 export class BulkInsertFromReadStreamOperation {
     reader: ReadStream

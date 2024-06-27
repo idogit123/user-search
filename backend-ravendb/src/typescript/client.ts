@@ -1,4 +1,4 @@
-import { DocumentStore, IAuthOptions, IDocumentQuery, QueryStatistics, GetCollectionStatisticsOperation, BulkInsertOperation, BulkInsertOnProgressEventArgs } from "ravendb"
+import { DocumentStore, IAuthOptions, IDocumentQuery, QueryStatistics } from "ravendb"
 import { readFileSync } from "fs"
 import dotenv from "dotenv"
 import { User } from "./User.js"
@@ -59,25 +59,6 @@ export async function getUsers(query: string, sort: string, isDescending: string
 
 export async function bulkInsertUsers(callback: (durationInMs: number) => void)
 {
-    // const reader = createInterface({
-    //     input: createReadStream(
-    //         'C:/Users/Ido Vitman Zilber/Documents/GitHub/user-search/user-generator/users.jsonl'
-    //     ),
-    // });
-    
-    // reader.on('line', async (line: string) => {
-    //     const user = JSON.parse(line)
-    //     await bulkInsert.store(user)
-    // });
-
-    // reader.on('close', async () => {
-    //     timer.start()
-    //     await bulkInsert.finish()
-    //     timer.end()
-
-    //     callback(timer.getDuration())
-    // });
-
     const bulkInsertOperation = new BulkInsertFromReadStreamOperation(
         'C:/Users/Ido Vitman Zilber/Documents/GitHub/user-search/user-generator/users1.jsonl',
         documentStore.bulkInsert()
