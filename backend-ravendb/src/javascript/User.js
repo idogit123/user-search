@@ -1,24 +1,18 @@
 export class User {
-    id;
     firstName;
     lastName;
-    addressId;
-    contactId;
-    jobId;
-    constructor(firstName, lastName, addressId, contactId, jobId) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.addressId = addressId;
-        this.contactId = contactId;
-        this.jobId = jobId;
-        this.id = User.createUserId(firstName, lastName);
-    }
-    static createUserId(firstName, lastName) {
-        return (firstName + '-' + lastName).toLowerCase().replaceAll(' ', '-');
+    address;
+    contact;
+    job;
+    constructor(args) {
+        this.firstName = args.firstName;
+        this.lastName = args.lastName;
+        this.address = new Address(args.address);
+        this.contact = new Contact(args.contact);
+        this.job = new Job(args.job);
     }
 }
 export class Address {
-    id;
     country;
     city;
     streetAdress;
@@ -28,14 +22,9 @@ export class Address {
         this.city = city;
         this.streetAdress = streetAddress;
         this.zipCode = zipCode;
-        this.id = this.createAddressId(country, zipCode);
-    }
-    createAddressId(country, zipCode) {
-        return (country.split(' ')[0] + '-' + zipCode).replaceAll(' ', '').toLowerCase();
     }
 }
 export class Contact {
-    id;
     phone;
     email;
     instegram;
@@ -43,14 +32,9 @@ export class Contact {
         this.phone = phone;
         this.email = email;
         this.instegram = instegram;
-        this.id = this.createContactId(email, phone);
-    }
-    createContactId(email, phone) {
-        return (email.split('@')[0] + '-' + phone.slice(phone.length - 2)).replaceAll(' ', '').toLowerCase();
     }
 }
 export class Job {
-    id;
     company;
     title;
     type;
@@ -58,9 +42,5 @@ export class Job {
         this.company = company;
         this.title = title;
         this.type = type;
-        this.id = this.createJobId(company, title);
-    }
-    createJobId(company, title) {
-        return (company.split(' ')[0] + '-' + title.split(' ')[0]).replaceAll(' ', '').toLowerCase();
     }
 }
