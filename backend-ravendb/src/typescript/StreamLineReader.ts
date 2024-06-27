@@ -104,31 +104,4 @@ export class BulkInsertFromReadStreamOperation {
     {
         this.events.end = callback
     }
-
-    fakeStoreLine(line: string)
-    {
-        const user = JSON.parse(line).firstName
-        // console.log('START Store: ', user)
-        return new Promise<void>(
-            (resolve, reject) => {
-                setTimeout(() => {
-                    // console.log('END Store: ', user)
-                    resolve()
-                }, 1)
-            }
-        )
-    }
-
-    fakeWaitForBulkInsert(linesProcessed: number)
-    {
-        console.log('WAIT For bulk insert, lines processed: ', linesProcessed)
-        return new Promise<void>(
-            (resolve, reject) => {
-                setTimeout(() => {
-                    console.log('END WAIT For bulk insert, lines proccessed ', linesProcessed)
-                    resolve()
-                }, 5000)
-            }
-        )
-    }
 }
