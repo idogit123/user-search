@@ -6,7 +6,7 @@ export class BulkInsertFromReadStreamOperation {
     bulkInsert: BulkInsertOperation
     events: {
         'line': (line: string) => { entity: object, id: string },
-        'end': (documentsProcessed: number) => void
+        'end': () => void
     }
 
     constructor(filePath: string, bulkInsertOperation: BulkInsertOperation)
@@ -41,7 +41,7 @@ export class BulkInsertFromReadStreamOperation {
                 if (finishedProcessingLines)
                 {
                     // await this.bulkInsert.finish()
-                    this.events.end(stats.progress.documentsProcessed)
+                    this.events.end()
                 }
                     
                 else
@@ -100,7 +100,7 @@ export class BulkInsertFromReadStreamOperation {
         this.events.line = callback
     }
 
-    onEnd(callback: (documentsProcessed: number) => void)
+    onEnd(callback: () => void)
     {
         this.events.end = callback
     }

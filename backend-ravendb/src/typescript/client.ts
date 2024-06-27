@@ -91,7 +91,7 @@ export async function bulkInsertUsers(callback: (durationInMs: number) => void)
         }
     })
 
-    bulkInsertOperation.onEnd((documentsProcessed) => {
+    bulkInsertOperation.onEnd(() => {
         timer.end()
         callback(timer.getDuration())
     })
