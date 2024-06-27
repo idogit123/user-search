@@ -14,8 +14,8 @@ app.get('/users', async (req, res) => {
     res.status(200).send(queryResult);
 });
 app.get('/insert', async (req, res) => {
-    bulkInsertUsers((durationInMs) => {
-        res.status(200).send({ durationInMs: durationInMs });
+    res.status(200).send({
+        durationInMs: await bulkInsertUsers()
     });
 });
 app.listen(PORT, () => { console.log(`ravendb client  listening on port: ${PORT}`); });

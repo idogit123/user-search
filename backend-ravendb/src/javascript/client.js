@@ -3,7 +3,8 @@ import { readFileSync } from "fs";
 import dotenv from "dotenv";
 import { User } from "./User.js";
 import { Timer } from "./Timer.js";
-import { BulkInsertFromReadStreamOperation } from "./StreamLineReader.js";
+import { createInterface } from "readline";
+import { createReadStream } from 'fs';
 dotenv.config(); // to access enviroment variables
 const authOptions = {
     certificate: readFileSync(process.env.CERTIFICATE_PATH),
@@ -40,19 +41,18 @@ export async function getUsers(query, sort, isDescending) {
         durationInMs: timer.getDuration()
     };
 }
-export async function bulkInsertUsers(callback) {
-    const bulkInsertOperation = new BulkInsertFromReadStreamOperation('C:/Users/Ido Vitman Zilber/Documents/GitHub/user-search/user-generator/users1.jsonl', documentStore.bulkInsert());
-    bulkInsertOperation.onLine((line) => {
-        const user = JSON.parse(line);
-        return {
-            entity: user,
-            id: User.createUserId(user.firstName, user.lastName)
-        };
-    });
-    bulkInsertOperation.onEnd(() => {
-        timer.end();
-        callback(timer.getDuration());
+export async function bulkInsertUsers() {
+    const bulkInsert = documentStore.bulkInsert();
+    const readline = createInterface({
+        input: createReadStream('C:/Users/Ido Vitman Zilber/Documents/GitHub/user-search/user-generator/users1.jsonl'),
+        crlfDelay: Infinity
     });
     timer.start();
-    bulkInsertOperation.bulkInsertSync();
+    for await (const line of readline) {
+        const user = JSON.parse(line);
+        await bulkInsert.store(new User(user));
+    }
+    await bulkInsert.finish();
+    timer.end();
+    return timer.getDuration();
 }
