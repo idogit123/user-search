@@ -40,7 +40,7 @@ export class BulkInsertFromReadStreamOperation {
             {
                 if (finishedProcessingLines)
                 {
-                    // await this.bulkInsert.finish()
+                    await this.bulkInsert.finish()
                     this.events.end()
                 }
                     
@@ -73,10 +73,7 @@ export class BulkInsertFromReadStreamOperation {
         })
 
         this.reader.on('error', (error: Error) => {
-            console.log('Error!!!')
-            console.log('cause: ', error.cause)
-            console.log('message: ', error.message)
-            console.log('name: ', error.name)
+            console.error(error)
         })
     }
 
