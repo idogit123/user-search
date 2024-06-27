@@ -1,7 +1,9 @@
 import { MongoClient } from "mongodb"
-import { User } from "./User"
-import dotenv from "dotenv"
+import { User } from "./User.js"
+import { createInterface } from "readline"
+import { createReadStream } from "fs"
 import { Timer } from "./Timer.js"
+import dotenv from "dotenv"
 dotenv.config()
 
 const databaseInfo = {
@@ -12,11 +14,10 @@ const databaseInfo = {
 
 const client = new MongoClient( databaseInfo.serverPath )
 const usersDB = client.db( databaseInfo.databaseName )
+const usersCollection = usersDB.collection<User>( databaseInfo.collectionName )
 const timer = new Timer()
 
 export async function getUsers(query: string, sort: string, isDescending: string) {
-    const usersCollection = usersDB.collection<User>( databaseInfo.collectionName )
-
     const usersQuery = usersCollection.find<User>(
         {
             $or: [
@@ -35,4 +36,24 @@ export async function getUsers(query: string, sort: string, isDescending: string
         users: users,
         durationInMs: timer.getDuration()
     }
+}
+
+export async function bulkInsert()
+{
+    const readline = createInterface({
+        input: createReadStream('C:/Users/Ido Vitman Zilber/Documents/GitHub/user-search/user-generator/users1.jsonl'),
+        crlfDelay: Infinity
+    })
+
+    timer.start()
+    for await (const line of readline) 
+    {
+        const user = JSON.parse(line)
+        await usersCollection.insertOne(new User(user))
+    }
+    timer.end()
+
+    console.log(await usersCollection.estimatedDocumentCount())
+
+    return timer.getDuration()
 }
