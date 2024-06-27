@@ -41,21 +41,6 @@ export async function getUsers(query, sort, isDescending) {
     };
 }
 export async function bulkInsertUsers(callback) {
-    // const reader = createInterface({
-    //     input: createReadStream(
-    //         'C:/Users/Ido Vitman Zilber/Documents/GitHub/user-search/user-generator/users.jsonl'
-    //     ),
-    // });
-    // reader.on('line', async (line: string) => {
-    //     const user = JSON.parse(line)
-    //     await bulkInsert.store(user)
-    // });
-    // reader.on('close', async () => {
-    //     timer.start()
-    //     await bulkInsert.finish()
-    //     timer.end()
-    //     callback(timer.getDuration())
-    // });
     const bulkInsertOperation = new BulkInsertFromReadStreamOperation('C:/Users/Ido Vitman Zilber/Documents/GitHub/user-search/user-generator/users1.jsonl', documentStore.bulkInsert());
     bulkInsertOperation.onLine((line) => {
         const user = JSON.parse(line);
@@ -64,7 +49,7 @@ export async function bulkInsertUsers(callback) {
             id: User.createUserId(user.firstName, user.lastName)
         };
     });
-    bulkInsertOperation.onEnd((documentsProcessed) => {
+    bulkInsertOperation.onEnd(() => {
         timer.end();
         callback(timer.getDuration());
     });

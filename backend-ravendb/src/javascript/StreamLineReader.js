@@ -28,8 +28,8 @@ export class BulkInsertFromReadStreamOperation {
             console.log('Batch count: ', stats.progress.batchCount);
             if (linesStored > 0 && linesStored == linesProcessed) {
                 if (finishedProcessingLines) {
-                    // await this.bulkInsert.finish()
-                    this.events.end(stats.progress.documentsProcessed);
+                    await this.bulkInsert.finish();
+                    this.events.end();
                 }
                 else
                     this.reader.resume();
@@ -53,10 +53,7 @@ export class BulkInsertFromReadStreamOperation {
             console.log('END lines processed: ', linesProcessed);
         });
         this.reader.on('error', (error) => {
-            console.log('Error!!!');
-            console.log('cause: ', error.cause);
-            console.log('message: ', error.message);
-            console.log('name: ', error.name);
+            console.error(error);
         });
     }
     bufferToLines(buffer, partLine) {
@@ -75,24 +72,5 @@ export class BulkInsertFromReadStreamOperation {
     }
     onEnd(callback) {
         this.events.end = callback;
-    }
-    fakeStoreLine(line) {
-        const user = JSON.parse(line).firstName;
-        // console.log('START Store: ', user)
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                // console.log('END Store: ', user)
-                resolve();
-            }, 1);
-        });
-    }
-    fakeWaitForBulkInsert(linesProcessed) {
-        console.log('WAIT For bulk insert, lines processed: ', linesProcessed);
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                console.log('END WAIT For bulk insert, lines proccessed ', linesProcessed);
-                resolve();
-            }, 5000);
-        });
     }
 }
