@@ -1,9 +1,9 @@
 import { DocumentStore, QueryStatistics } from "ravendb";
-import { readFileSync, createReadStream } from "fs";
+import { readFileSync } from "fs";
 import dotenv from "dotenv";
 import { User } from "./User.js";
 import { Timer } from "./Timer.js";
-import ReadLine from "readline";
+import { StreamLineReader } from "./StreamLineReader.js";
 dotenv.config(); // to access enviroment variables
 const authOptions = {
     certificate: readFileSync(process.env.CERTIFICATE_PATH),
@@ -13,7 +13,6 @@ const authOptions = {
 const documentStore = new DocumentStore(process.env.SERVER_ADDRESS, process.env.DATABASE_NAME, authOptions);
 documentStore.initialize();
 const timer = new Timer();
-bulkInsertUsers('C:/Users/Ido Vitman Zilber/Documents/GitHub/user-search/user-generator/users.jsonl');
 export async function getUsers(query, sort, isDescending) {
     let queryStats = new QueryStatistics();
     const session = documentStore.openSession();
@@ -27,7 +26,8 @@ export async function getUsers(query, sort, isDescending) {
             .whereStartsWith('city', query)
             .statistics(stats => queryStats = stats);
     else
-        usersQuery = session.query(User);
+        usersQuery = session.query(User)
+            .statistics(stats => queryStats = stats);
     if (isDescending == "true")
         usersQuery.orderByDescending(sort);
     else
@@ -40,15 +40,46 @@ export async function getUsers(query, sort, isDescending) {
         durationInMs: timer.getDuration()
     };
 }
-export async function bulkInsertUsers(filePath) {
-    const reader = ReadLine.createInterface({
-        input: createReadStream(filePath),
+export async function bulkInsertUsers(callback) {
+    // const reader = createInterface({
+    //     input: createReadStream(
+    //         'C:/Users/Ido Vitman Zilber/Documents/GitHub/user-search/user-generator/users.jsonl'
+    //     ),
+    // });
+    // reader.on('line', async (line: string) => {
+    //     const user = JSON.parse(line)
+    //     await bulkInsert.store(user)
+    // });
+    // reader.on('close', async () => {
+    //     timer.start()
+    //     await bulkInsert.finish()
+    //     timer.end()
+    //     callback(timer.getDuration())
+    // });
+    const reader = new StreamLineReader('C:/Users/Ido Vitman Zilber/Documents/GitHub/user-search/user-generator/users.jsonl');
+    reader.readLinesSync(async (line, bulkInsert) => {
+        const user = JSON.parse(line);
+        await bulkInsert.store(user, User.createUserId(user.firstName, user.lastName), {
+            isDirty: () => false,
+            '@collection': 'Users'
+        });
+    }, async () => {
+        return documentStore.bulkInsert();
+    }, async (bulkInsert, linesProcessed) => {
+        await waitForBulkInsert(bulkInsert, linesProcessed);
+        await bulkInsert.finish();
+    }, async (linesProcessed) => {
+        callback(linesProcessed);
     });
-    reader.on('line', function (line) {
-        const json = JSON.parse(line);
-        console.log(json);
-    });
-    reader.on('close', function () {
-        console.log('all done, son');
+}
+function waitForBulkInsert(bulkInsert, linesProcessed) {
+    return new Promise(async (resolve, reject) => {
+        bulkInsert.on('progress', (stats) => {
+            console.log('Lines processed: ', linesProcessed);
+            console.log('Users stored: ', stats.progress.documentsProcessed);
+            if (stats.progress.documentsProcessed == linesProcessed) {
+                resolve(stats.progress.documentsProcessed);
+            }
+        });
     });
 }

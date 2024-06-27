@@ -43,9 +43,13 @@ function createUsersJson(jsonPath, usersAmount)
         console.log('Users written to users.jsonl');
     })
 
+    writeStream.on('close', () => {
+        console.log('stream closed')
+    })
+
     writeStream.on('error', (error) => {
         console.log(error)
     })
 }
 
-createUsersJson('users.jsonl', 10_000_000)
+createUsersJson('users.jsonl', 2_000_000)

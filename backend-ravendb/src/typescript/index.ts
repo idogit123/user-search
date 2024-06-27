@@ -1,7 +1,7 @@
 import express from "express"
 import cors from "cors"
 import dotenv from "dotenv"
-import { getUsers } from "./client.js"
+import { bulkInsertUsers, getUsers } from "./client.js"
 dotenv.config()
 
 const PORT = process.env.API_PORT as string // how to make it ready for production without ports ???
@@ -23,6 +23,14 @@ app.get('/users', async (req, res) => {
     
     res.status(200).send(
         queryResult
+    )
+})
+
+app.get('/insert', async (req, res) => {
+    bulkInsertUsers(
+        (durationInMs: number) => {
+            res.status(200).send({ durationInMs: durationInMs })
+        }
     )
 })
 
