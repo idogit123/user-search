@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 import dotenv from "dotenv";
 import { User } from "./User.js";
 import { Timer } from "./Timer.js";
-import { StreamLineReader } from "./StreamLineReader.js";
+import { BulkInsertFromReadStreamOperation } from "./StreamLineReader.js";
 dotenv.config(); // to access enviroment variables
 const authOptions = {
     certificate: readFileSync(process.env.CERTIFICATE_PATH),
@@ -56,30 +56,18 @@ export async function bulkInsertUsers(callback) {
     //     timer.end()
     //     callback(timer.getDuration())
     // });
-    const reader = new StreamLineReader('C:/Users/Ido Vitman Zilber/Documents/GitHub/user-search/user-generator/users.jsonl');
-    reader.readLinesSync(async (line, bulkInsert) => {
+    const bulkInsertOperation = new BulkInsertFromReadStreamOperation('C:/Users/Ido Vitman Zilber/Documents/GitHub/user-search/user-generator/users1.jsonl', documentStore.bulkInsert());
+    bulkInsertOperation.onLine((line) => {
         const user = JSON.parse(line);
-        await bulkInsert.store(user, User.createUserId(user.firstName, user.lastName), {
-            isDirty: () => false,
-            '@collection': 'Users'
-        });
-    }, async () => {
-        return documentStore.bulkInsert();
-    }, async (bulkInsert, linesProcessed) => {
-        await waitForBulkInsert(bulkInsert, linesProcessed);
-        await bulkInsert.finish();
-    }, async (linesProcessed) => {
-        callback(linesProcessed);
+        return {
+            entity: user,
+            id: User.createUserId(user.firstName, user.lastName)
+        };
     });
-}
-function waitForBulkInsert(bulkInsert, linesProcessed) {
-    return new Promise(async (resolve, reject) => {
-        bulkInsert.on('progress', (stats) => {
-            console.log('Lines processed: ', linesProcessed);
-            console.log('Users stored: ', stats.progress.documentsProcessed);
-            if (stats.progress.documentsProcessed == linesProcessed) {
-                resolve(stats.progress.documentsProcessed);
-            }
-        });
+    bulkInsertOperation.onEnd((documentsProcessed) => {
+        timer.end();
+        callback(timer.getDuration());
     });
+    timer.start();
+    bulkInsertOperation.bulkInsertSync();
 }

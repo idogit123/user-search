@@ -10,7 +10,7 @@
     "mongodb": "start mongod",
     "mongodb-api": "cd backend-mongodb && npm run dev",
     "app": "cd frontend && npm run dev",
-    "user-generator": "py user-generator/main.py"
+    "user-generator": "cd user-generator && npm run dev"
   },
   "keywords": [],
   "author": "",
