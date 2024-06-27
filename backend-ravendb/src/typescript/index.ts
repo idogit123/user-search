@@ -27,11 +27,9 @@ app.get('/users', async (req, res) => {
 })
 
 app.get('/insert', async (req, res) => {
-    bulkInsertUsers(
-        (durationInMs: number) => {
-            res.status(200).send({ durationInMs: durationInMs })
-        }
-    )
+    res.status(200).send({ 
+        durationInMs: await bulkInsertUsers() 
+    })
 })
 
 app.listen(
