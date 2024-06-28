@@ -20,7 +20,9 @@ export async function getUsers(query, sort, isDescending, page) {
         $or: [
             { 'firstName': { $regex: new RegExp("^" + query, "i") } },
             { 'lastName': { $regex: new RegExp("^" + query, "i") } },
-            { 'city': { $regex: new RegExp("^" + query, "i") } }
+            { 'address.city': { $regex: new RegExp("^" + query, "i") } },
+            { 'contact.instegram': { $regex: new RegExp("^" + query, "i") } },
+            { 'job.title': { $regex: new RegExp("^" + query, "i") } }
         ],
     })
         .sort(sort, isDescending == "true" ? -1 : 1)
