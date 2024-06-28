@@ -19,9 +19,9 @@ export default function ColumnHeader(
         setQuery(
             (oldQuery: Query) => {
                 if (oldQuery.sort == column)
-                    return new Query(oldQuery.query, oldQuery.sort, !oldQuery.isOrderDescending) // flip order
+                    return new Query(oldQuery.query, oldQuery.sort, !oldQuery.isOrderDescending, oldQuery.page) // flip order
                 else 
-                    return new Query(oldQuery.query, column, false) // change sorting column
+                    return new Query(oldQuery.query, column, false, oldQuery.page) // change sorting column
             }
         )
     }

@@ -3,18 +3,32 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: flex-end;
+    column-gap: 1rem;
     font-size: 1.5rem;
+    height: 2.5rem;
 }
 
 #input {
     flex-grow: 2;
     font-size: 1.5rem;
+    height: 100%;
 }
 
 #select {
     font-size: 1.5rem;
 }
 
-#button {
+#pageContainer {
+    height: 100%;
+}
+
+#pageContainer p {
+    margin: 0 .5rem;
+    display: inline;
+    height: 100%;
+}
+
+#pageContainer button {
     font-size: 1.5rem;
+    height: 100%;
 }

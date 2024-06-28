@@ -12,7 +12,7 @@ export default function QueryResults(
 
     async function getUsers() {
         const response = await fetch(
-            `http://localhost:8080/users?query=${query.query}&sort=${query.sort}&isDescending=${query.isOrderDescending}`
+            `http://localhost:8080/users/${query.page}?query=${query.query}&sort=${query.sort}&isDescending=${query.isOrderDescending}`
         )
         
         const queryResult = (await response.json()) as QueryResult
