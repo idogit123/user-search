@@ -26,7 +26,11 @@ export async function getUsers(query, sort, isDescending, page) {
             .orElse()
             .whereStartsWith('lastName', query)
             .orElse()
-            .whereStartsWith('city', query);
+            .whereStartsWith('address.city', query)
+            .orElse()
+            .whereStartsWith('contact.instegram', query)
+            .orElse()
+            .whereStartsWith('job.title', query);
     if (isDescending == "true")
         usersQuery.orderByDescending(sort);
     else

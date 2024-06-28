@@ -11,7 +11,6 @@ app.use(cors({
 }));
 app.get('/users/:page', async (req, res) => {
     const queryResult = await getUsers(req.query.query, req.query.sort, req.query.isDescending, parseInt(req.params.page));
-    console.log(queryResult);
     res.status(200).send(queryResult);
 });
 app.get('/insert', async (req, res) => {
