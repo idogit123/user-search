@@ -1,11 +1,17 @@
-
+import { User } from "@/types/User"
 
 export default function ResultRow(
-    { user: {firstName, lastName, city} }: { user: {firstName: string, lastName: string, city: string} }
+    { 
+        user
+    } : { 
+        user: User
+    }
 ) {
     return  <tr>
-        <td>{firstName}</td>
-        <td>{lastName}</td>
-        <td>{city}</td>
+        <td>{user.firstName}</td>
+        <td>{user.lastName}</td>
+        <td>{user.address.city}</td>
+        <td>{user.contact.instegram}</td>
+        <td>{user.job.title}</td>
     </tr>
 }

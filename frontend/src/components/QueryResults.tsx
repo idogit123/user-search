@@ -38,8 +38,14 @@ export default function QueryResults(
                     <ColumnHeader column="lastName" setQuery={setQuery} query={query}>
                         <p>Last Name</p> 
                     </ColumnHeader>
-                    <ColumnHeader column="city" setQuery={setQuery} query={query}>
+                    <ColumnHeader column="address.city" setQuery={setQuery} query={query}>
                         <p>City</p> 
+                    </ColumnHeader>
+                    <ColumnHeader column="contact.instegram" setQuery={setQuery} query={query}>
+                        <p>Instegram</p>
+                    </ColumnHeader>
+                    <ColumnHeader column="job.title" setQuery={setQuery} query={query}>
+                        <p>Job Title</p>
                     </ColumnHeader>
                 </tr>
                 {
