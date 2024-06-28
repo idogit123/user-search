@@ -21,8 +21,6 @@ app.get('/users/:page', async (req, res) => {
         req.query.isDescending as string,
         parseInt(req.params.page)
     )
-    
-    console.log(queryResult.users)
 
     res.status(200).send(
         queryResult
