@@ -1,4 +1,4 @@
-import { DocumentStore, QueryStatistics } from "ravendb";
+import { DocumentStore } from "ravendb";
 import { readFileSync } from "fs";
 import dotenv from "dotenv";
 import { User } from "./User.js";
@@ -14,21 +14,19 @@ const authOptions = {
 const documentStore = new DocumentStore(process.env.SERVER_ADDRESS, process.env.DATABASE_NAME, authOptions);
 documentStore.initialize();
 const timer = new Timer();
-export async function getUsers(query, sort, isDescending) {
-    let queryStats = new QueryStatistics();
+export async function getUsers(query, sort, isDescending, page) {
+    const PAGE_SIZE = 10;
     const session = documentStore.openSession();
-    let usersQuery;
+    let usersQuery = session.query({ collection: 'users' })
+        .skip(PAGE_SIZE * page)
+        .take(PAGE_SIZE);
     if (query.length > 0)
-        usersQuery = session.query(User)
+        usersQuery
             .whereStartsWith('firstName', query)
             .orElse()
             .whereStartsWith('lastName', query)
             .orElse()
-            .whereStartsWith('city', query)
-            .statistics(stats => queryStats = stats);
-    else
-        usersQuery = session.query(User)
-            .statistics(stats => queryStats = stats);
+            .whereStartsWith('city', query);
     if (isDescending == "true")
         usersQuery.orderByDescending(sort);
     else

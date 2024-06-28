@@ -23,25 +23,23 @@ documentStore.initialize()
 
 const timer = new Timer()
 
-export async function getUsers(query: string, sort: string, isDescending: string)
+export async function getUsers(query: string, sort: string, isDescending: string, page: number)
 {
-    let queryStats: QueryStatistics = new QueryStatistics()
-
+    const PAGE_SIZE = 10
     const session = documentStore.openSession()
 
-    let usersQuery: IDocumentQuery<User>
+    let usersQuery = session.query({ collection: 'users' })
+        .skip(PAGE_SIZE * page)
+        .take(PAGE_SIZE)
+
     if (query.length > 0)
-        usersQuery = session.query<User>(User)
+        usersQuery
             .whereStartsWith('firstName', query)
             .orElse()
             .whereStartsWith('lastName', query)
             .orElse()
             .whereStartsWith('city', query)
-            .statistics( stats => queryStats = stats )
-
-    else 
-        usersQuery = session.query<User>(User)
-            .statistics( stats => queryStats = stats )
+            
 
     if (isDescending == "true")
         usersQuery.orderByDescending(sort)
