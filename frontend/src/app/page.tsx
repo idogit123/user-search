@@ -1,18 +1,16 @@
-"use client";
-
 import QueryForm from '@/components/home-page/QueryForm';
 import styles from './page.module.css'
 import QueryResults from '@/components/home-page/QueryResults';
-import { useState } from 'react';
-import { Query } from '@/types/Query';
+import QueryContextProvider from '@/contexts/QueryContext';
 
-export default function Home() {
-  const [query, setQuery] = useState(new Query("", "firstName", false, 0))
+export default function Home(
+  { searchParams }: { searchParams: { page: number, query: string, sort: string, isDescending: boolean } }
+) {
 
-  return (
+  return <QueryContextProvider>
     <main id={styles.main}>
-      <QueryForm query={query} setQuery={setQuery} />
-      <QueryResults query={query} setQuery={setQuery} />
+      <QueryForm  />
+      <QueryResults searchParams={searchParams} />
     </main>
-  );
+  </QueryContextProvider>
 }

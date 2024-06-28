@@ -1,18 +1,28 @@
+"use client"
+
+import { useSetQuery } from "@/contexts/QueryContext"
 import styles from "@/styles/queryForm.module.css"
+import { Query } from "@/types/Query"
 import { Timer } from "@/types/Timer"
 
-export default function FormInput({ formId }: { formId: string })
+export default function FormInput()
 {
     const timer = new Timer()
+    const setQuery = useSetQuery()
 
-    function submitForm() {
+    function updateQuery() {
         timer.stop()
 
-        const form = document.getElementById(formId) as HTMLFormElement
-        form.requestSubmit()
+        const newQuery = (document.getElementById(styles.input) as HTMLInputElement).value
+        setQuery((oldQuery: Query) => new Query(
+            newQuery,
+            oldQuery.sort,
+            oldQuery.isOrderDescending,
+            oldQuery.page
+        ))
     }
 
-    return <input id={styles.input} type="search" name="query" placeholder='Search user' onBlur={submitForm} onChange={
-        () => timer.start(() =>  submitForm(), 350)
+    return <input id={styles.input} type="search" placeholder='Search user' onBlur={updateQuery} onChange={
+        () => timer.start(updateQuery, 350)
     } />
 }

@@ -1,50 +1,37 @@
+"use server"
+
 import styles from '@/styles/queryResults.module.css'
 import UserRow from './UserRow'
-import { useEffect, useState } from 'react'
 import { QueryResult } from '@/types/QueryResult'
-import { Query } from '@/types/Query'
 import ColumnHeader from './ColumnHeader'
 
-export default function QueryResults(
-    { query, setQuery }: { query: Query, setQuery: Function }
+export default async function QueryResults(
+    { searchParams: { page, query, sort, isDescending } }: 
+    { searchParams: { page: number, query: string, sort: string, isDescending: boolean } }
 ) {
-    const [queryResult, setQueryResult] = useState<QueryResult>()
-
-    async function getUsers() {
-        const response = await fetch(
-            `http://localhost:8080/users/${query.page}?query=${query.query}&sort=${query.sort}&isDescending=${query.isOrderDescending}`
-        )
-        
-        const queryResult = (await response.json()) as QueryResult
-        
-        setQueryResult( queryResult )
-    }
-
-    useEffect(
-        () => {
-            getUsers()
-        },
-        [query]
+    const response = await fetch(
+        `http://localhost:8080/users/${page}?query=${query}&sort=${sort}&isDescending=${isDescending}`
     )
+    const queryResult = (await response.json()) as QueryResult
 
     return <>
-        <p id={styles.timer}>Completed in: <span>{queryResult?.durationInMs}</span>ms</p>
+        <p id={styles.timer}>Completed in: <span>{queryResult.durationInMs}</span>ms</p>
         <table id={styles.table}>
             <tbody>
                 <tr>
-                    <ColumnHeader column="firstName" setQuery={setQuery} query={query}>
+                    <ColumnHeader column="firstName" >
                         <p>First Name</p> 
                     </ColumnHeader>
-                    <ColumnHeader column="lastName" setQuery={setQuery} query={query}>
+                    <ColumnHeader column="lastName" >
                         <p>Last Name</p> 
                     </ColumnHeader>
-                    <ColumnHeader column="address.city" setQuery={setQuery} query={query}>
+                    <ColumnHeader column="address.city" >
                         <p>City</p> 
                     </ColumnHeader>
-                    <ColumnHeader column="contact.instegram" setQuery={setQuery} query={query}>
+                    <ColumnHeader column="contact.instegram" >
                         <p>Instegram</p>
                     </ColumnHeader>
-                    <ColumnHeader column="job.title" setQuery={setQuery} query={query}>
+                    <ColumnHeader column="job.title" >
                         <p>Job Title</p>
                     </ColumnHeader>
                 </tr>

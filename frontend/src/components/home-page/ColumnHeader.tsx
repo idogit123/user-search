@@ -1,8 +1,13 @@
+"use client"
+
+import { useQuery, useSetQuery } from "@/contexts/QueryContext"
 import { Query } from "@/types/Query"
 
 export default function ColumnHeader(
-    { column, setQuery, query, children }: { column: string, setQuery: Function, query: Query, children: JSX.Element }
+    { column, children }: { column: string, children: JSX.Element }
 ) {
+    const query = useQuery()
+    const setQuery = useSetQuery()
     const sortOrder: "down" | "up" | "none" = getSortOrder()
 
     function getSortOrder() {
