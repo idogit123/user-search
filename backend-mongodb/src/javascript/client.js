@@ -14,14 +14,18 @@ const client = new MongoClient(databaseInfo.serverPath);
 const usersDB = client.db(databaseInfo.databaseName);
 const usersCollection = usersDB.collection(databaseInfo.collectionName);
 const timer = new Timer();
-export async function getUsers(query, sort, isDescending) {
+export async function getUsers(query, sort, isDescending, page) {
+    const PAGE_SIZE = 10;
     const usersQuery = usersCollection.find({
         $or: [
             { 'firstName': { $regex: new RegExp("^" + query, "i") } },
             { 'lastName': { $regex: new RegExp("^" + query, "i") } },
             { 'city': { $regex: new RegExp("^" + query, "i") } }
-        ]
-    }).sort(sort, isDescending == "true" ? -1 : 1);
+        ],
+    })
+        .sort(sort, isDescending == "true" ? -1 : 1)
+        .skip(PAGE_SIZE * page)
+        .limit(PAGE_SIZE);
     timer.start();
     const users = await usersQuery.toArray();
     timer.end();

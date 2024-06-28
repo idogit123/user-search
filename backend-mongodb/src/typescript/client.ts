@@ -17,16 +17,19 @@ const usersDB = client.db( databaseInfo.databaseName )
 const usersCollection = usersDB.collection<User>( databaseInfo.collectionName )
 const timer = new Timer()
 
-export async function getUsers(query: string, sort: string, isDescending: string) {
+export async function getUsers(query: string, sort: string, isDescending: string, page: number) {
+    const PAGE_SIZE = 10
     const usersQuery = usersCollection.find<User>(
         {
             $or: [
                 { 'firstName': { $regex: new RegExp("^" + query, "i") } },
                 { 'lastName': { $regex: new RegExp("^" + query, "i") } },
                 { 'city': { $regex: new RegExp("^" + query, "i") } }
-            ]
-        }
-    ).sort(sort, isDescending == "true" ? -1 : 1)
+            ],
+        })
+        .sort(sort, isDescending == "true" ? -1 : 1)
+        .skip(PAGE_SIZE * page)
+        .limit(PAGE_SIZE)
     
     timer.start()
     const users = await usersQuery.toArray()
