@@ -1,6 +1,6 @@
-import QueryForm from '@/components/home-page/QueryForm';
+import QueryForm from '@/components/QueryForm';
 import styles from './page.module.css'
-import QueryResults from '@/components/home-page/QueryResults';
+import QueryResults from '@/components/QueryResults';
 import QueryContextProvider from '@/contexts/QueryContext';
 
 export default function Home(
