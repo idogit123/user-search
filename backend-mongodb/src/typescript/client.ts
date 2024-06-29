@@ -17,8 +17,7 @@ const usersDB = client.db( databaseInfo.databaseName )
 const usersCollection = usersDB.collection<User>( databaseInfo.collectionName )
 const timer = new Timer()
 
-export async function getUsers(query: string, sort: string, isDescending: string, page: number) {
-    const PAGE_SIZE = 10
+export async function getUsers(query: string, sort: string, isDescending: string) {
     const usersQuery = usersCollection.find<User>(
         {
             $or: [
@@ -30,8 +29,6 @@ export async function getUsers(query: string, sort: string, isDescending: string
             ],
         })
         .sort(sort, isDescending == "true" ? -1 : 1)
-        .skip(PAGE_SIZE * page)
-        .limit(PAGE_SIZE)
     
     timer.start()
     const users = await usersQuery.toArray()
@@ -41,24 +38,4 @@ export async function getUsers(query: string, sort: string, isDescending: string
         users: users,
         durationInMs: timer.getDuration()
     }
-}
-
-export async function bulkInsert()
-{
-    const readline = createInterface({
-        input: createReadStream('C:/Users/Ido Vitman Zilber/Documents/GitHub/user-search/user-generator/users1.jsonl'),
-        crlfDelay: Infinity
-    })
-
-    timer.start()
-    for await (const line of readline) 
-    {
-        const user = JSON.parse(line)
-        await usersCollection.insertOne(new User(user))
-    }
-    timer.end()
-
-    console.log(await usersCollection.estimatedDocumentCount())
-
-    return timer.getDuration()
 }
