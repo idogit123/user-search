@@ -17,6 +17,7 @@
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     border-radius: .5rem;
     padding: .5rem;
+    background-color: var(--grey);
 }
 
 #form div:first-child {
@@ -68,11 +69,14 @@
     padding: 0 1rem;
     height: 3rem;
     cursor: pointer;
-    background-color: white;
-    border: 1px solid rgba(0, 0, 0, 0.16);
+    background-color: var(--light-grey);
+    border: 3px solid var(--accent-blue);
     box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
     margin-right: 1rem;
     transition: background-color 200ms;
+    color: var(--text);
+    font-size: 2rem;
+    /* font-weight: bold; */
     width: 100%;
 }
 
@@ -88,4 +92,5 @@
 
 #timer span {
     font-weight: bold;
+    color: var(--accent-blue);
 }
