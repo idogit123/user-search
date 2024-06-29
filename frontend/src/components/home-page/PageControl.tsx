@@ -24,7 +24,9 @@ export default function PageControl()
 
     return <div id={styles.pageContainer}>
         <button onClick={() => updatePage(-1)} >{'<'}</button>
-        <p>{query.page}</p>
+        <div>
+            <p>{query.page}</p>
+        </div>
         <button onClick={() => updatePage(1)}>{'>'}</button>
     </div>
 }

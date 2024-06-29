@@ -1,7 +1,14 @@
 :root {
   font-size: 16px;
+  --dark-grey: #202124;
+  --grey: #3c4042;
+  --light-grey: #606368;
+  --accent-blue: #00a6ed;
+  --text: #dddddd;
 }
 
 body {
   margin: 0;
+  background-color: var(--dark-grey);
+  color: var(--text);
 }
