@@ -14,7 +14,7 @@ app.use(
     })
 )
 
-app.get('/users/:page', async (req, res) => {
+app.get('/users', async (req, res) => {
     const queryResult = await getUsers(
         req.query.query as string,
         req.query.sort as string,
