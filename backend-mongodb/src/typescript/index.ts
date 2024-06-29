@@ -1,7 +1,7 @@
 import dotenv from "dotenv"
 import express from "express"
 import cors from "cors"
-import { bulkInsert, getUsers } from "./client.js"
+import { getUsers } from "./client.js"
 dotenv.config()
 
 const PORT = process.env.API_PORT as string // how to make it ready for production without ports ???
