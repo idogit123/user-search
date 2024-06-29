@@ -1,5 +1,5 @@
 import styles from '../page.module.css'
-import EstimateTimer from './EstimateTimer';
+import EstimateTimer from '@/components/insert-page/EstimateTimer';
 
 export default function LoadingBulkInsertResultPage()
 {

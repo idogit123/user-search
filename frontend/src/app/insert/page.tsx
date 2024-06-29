@@ -1,6 +1,6 @@
 "use server";
 
-import FormButton from '@/components/FormButton';
+import FormButton from '@/components/insert-page/FormButton';
 import styles from './page.module.css'
 import { redirect } from 'next/navigation';
 
