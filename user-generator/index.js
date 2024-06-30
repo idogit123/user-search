@@ -52,4 +52,4 @@ function createUsersJson(jsonPath, usersAmount)
     })
 }
 
-createUsersJson('users1.jsonl', 1_000_000)
+createUsersJson('users1.jsonl', 10_000_000)
