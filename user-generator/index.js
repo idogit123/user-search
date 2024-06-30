@@ -52,4 +52,14 @@ function createUsersJson(jsonPath, usersAmount)
     })
 }
 
-createUsersJson('users1.jsonl', 10_000_000)
+function createMultipleFiles(basePath, usersPerFile, fileAmount)
+{
+    for (let i=0; i < fileAmount; i++)
+    {
+        const jsonPath = `${basePath + i}.jsonl`;
+        createUsersJson(jsonPath, usersPerFile)
+        console.log('created file: ', jsonPath)
+    }
+}
+
+createMultipleFiles('users', 1_000_000, 10)
