@@ -5,7 +5,6 @@ import { User } from "./User.js"
 import { Timer } from "./Timer.js"
 import { createInterface } from "readline"
 import { createReadStream, readdirSync } from 'fs'
-
 dotenv.config() // to access enviroment variables
 
 const authOptions: IAuthOptions = {
@@ -75,8 +74,8 @@ export async function bulkInsertUsers()
 
         for await (const line of readline)
         {
-            const user = JSON.parse(line)
-            await bulkInsert.store(new User(user))
+            const user = new User(JSON.parse(line))
+            await bulkInsert.store(user)
         }
         
         readline.close()

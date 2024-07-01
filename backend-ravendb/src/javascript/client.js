@@ -53,8 +53,8 @@ export async function bulkInsertUsers() {
             crlfDelay: Infinity
         });
         for await (const line of readline) {
-            const user = JSON.parse(line);
-            await bulkInsert.store(new User(user));
+            const user = new User(JSON.parse(line));
+            await bulkInsert.store(user);
         }
         readline.close();
         await bulkInsert.finish();
@@ -63,3 +63,4 @@ export async function bulkInsertUsers() {
     timer.end();
     return timer.getDuration();
 }
+//# sourceMappingURL=client.js.map
