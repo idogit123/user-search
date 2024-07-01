@@ -4,10 +4,19 @@ import styles from '../page.module.css'
 
 export default async function BulkInsertResultPage()
 {
-    const response = await fetch('http://localhost:8080/insert', {
-        'cache': 'no-cache'
+    const durationInMs = await new Promise<number>(async (resolve, reject) => {
+        try {
+            const response = await fetch('http://localhost:8080/insert', {
+                'cache': 'no-cache'
+            })
+            resolve((await response.json()).durationInMs)
+        }
+        catch (error: unknown) {
+            console.log( (error as Error).name )
+        }   
     })
-    const durationInMs = (await response.json()).durationInMs
+    
+    
 
     return <main id={styles.page}>
         <div id={styles.form}>

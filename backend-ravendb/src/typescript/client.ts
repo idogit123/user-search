@@ -1,10 +1,10 @@
-import { DocumentStore, IAuthOptions, IDocumentQuery, QueryStatistics } from "ravendb"
+import { DocumentStore, IAuthOptions } from "ravendb"
 import { readFileSync } from "fs"
 import dotenv from "dotenv"
 import { User } from "./User.js"
 import { Timer } from "./Timer.js"
 import { createInterface } from "readline"
-import { createReadStream } from 'fs'
+import { createReadStream, readdirSync } from 'fs'
 
 dotenv.config() // to access enviroment variables
 
@@ -62,20 +62,27 @@ export async function getUsers(query: string, sort: string, isDescending: string
 
 export async function bulkInsertUsers()
 {
-    const bulkInsert = documentStore.bulkInsert()
-    const readline = createInterface({
-        input: createReadStream('C:/Users/Ido Vitman Zilber/Documents/GitHub/user-search/user-generator/users1.jsonl'),
-        crlfDelay: Infinity
-    })
+    const userFiles = readdirSync(process.env.USERS_DIR as string)
 
     timer.start()
-    for await (const line of readline)
+    for (const userFilePath of userFiles)
     {
-        const user = JSON.parse(line)
-        await bulkInsert.store(new User(user))
-    }
+        const bulkInsert = documentStore.bulkInsert()
+        const readline = createInterface({
+            input: createReadStream(`${process.env.USERS_DIR}/${userFilePath}`),
+            crlfDelay: Infinity
+        })
 
-    await bulkInsert.finish()
+        for await (const line of readline)
+        {
+            const user = JSON.parse(line)
+            await bulkInsert.store(new User(user))
+        }
+        
+        readline.close()
+        await bulkInsert.finish()
+        console.log('FINISHED Inserting file: ', userFilePath)
+    }
     timer.end()
 
     return timer.getDuration()

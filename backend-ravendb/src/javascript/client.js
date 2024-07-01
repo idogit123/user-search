@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import { User } from "./User.js";
 import { Timer } from "./Timer.js";
 import { createInterface } from "readline";
-import { createReadStream } from 'fs';
+import { createReadStream, readdirSync } from 'fs';
 dotenv.config(); // to access enviroment variables
 const authOptions = {
     certificate: readFileSync(process.env.CERTIFICATE_PATH),
@@ -44,17 +44,22 @@ export async function getUsers(query, sort, isDescending, page) {
     };
 }
 export async function bulkInsertUsers() {
-    const bulkInsert = documentStore.bulkInsert();
-    const readline = createInterface({
-        input: createReadStream('C:/Users/Ido Vitman Zilber/Documents/GitHub/user-search/user-generator/users1.jsonl'),
-        crlfDelay: Infinity
-    });
+    const userFiles = readdirSync(process.env.USERS_DIR);
     timer.start();
-    for await (const line of readline) {
-        const user = JSON.parse(line);
-        await bulkInsert.store(new User(user));
+    for (const userFilePath of userFiles) {
+        const bulkInsert = documentStore.bulkInsert();
+        const readline = createInterface({
+            input: createReadStream(`${process.env.USERS_DIR}/${userFilePath}`),
+            crlfDelay: Infinity
+        });
+        for await (const line of readline) {
+            const user = JSON.parse(line);
+            await bulkInsert.store(new User(user));
+        }
+        readline.close();
+        await bulkInsert.finish();
+        console.log('FINISHED Inserting file: ', userFilePath);
     }
-    await bulkInsert.finish();
     timer.end();
     return timer.getDuration();
 }
