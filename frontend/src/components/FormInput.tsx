@@ -17,12 +17,11 @@ export default function FormInput()
         setQuery((oldQuery: Query) => new Query(
             newQuery,
             oldQuery.sort,
-            oldQuery.isOrderDescending,
-            oldQuery.page
+            oldQuery.isOrderDescending
         ))
     }
 
-    return <input id={styles.input} type="search" placeholder='Search user' onBlur={updateQuery} onChange={
+    return <input id={styles.input} type="search" placeholder='Search user' onBlur={updateQuery} autoComplete="off" onChange={
         () => timer.start(updateQuery, 350)
     } />
 }
