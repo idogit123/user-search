@@ -25,23 +25,11 @@ export async function getUsers(query: string, sort: string, isDescending: string
     const session = documentStore.openSession()
 
     let usersQuery = session.query({ collection: 'users' })
+        .addOrder(sort, isDescending == "true")
 
     if (query.length > 0)
         usersQuery
             .whereStartsWith('firstName', query)
-            .orElse()
-            .whereStartsWith('lastName', query)
-            .orElse()
-            .whereStartsWith('address.city', query)
-            .orElse()
-            .whereStartsWith('contact.instegram', query)
-            .orElse()
-            .whereStartsWith('job.title', query)
-            
-    if (isDescending == "true")
-        usersQuery.orderByDescending(sort)
-    else 
-        usersQuery.orderBy(sort)
         
     timer.start()
     const users = await usersQuery.all()
