@@ -2,7 +2,6 @@ import { DocumentStore, IAuthOptions } from "ravendb"
 import { readFileSync } from "fs"
 import dotenv from "dotenv"
 import { Timer } from "./Timer.js"
-
 dotenv.config() // to access enviroment variables
 
 const authOptions: IAuthOptions = {
