@@ -18,13 +18,7 @@ const timer = new Timer()
 export async function getUsers(query: string, sort: string, isDescending: string) {
     const usersQuery = usersCollection.find<User>(
         {
-            $or: [
-                { 'firstName': { $regex: new RegExp("^" + query, "i") } },
-                { 'lastName': { $regex: new RegExp("^" + query, "i") } },
-                { 'address.city': { $regex: new RegExp("^" + query, "i") } },
-                { 'contact.instegram': { $regex: new RegExp("^" + query, "i") } },
-                { 'job.title': { $regex: new RegExp("^" + query, "i") } }
-            ],
+            'firstName': { $regex: new RegExp("^" + query, "i") }
         })
         .sort(sort, isDescending == "true" ? -1 : 1)
     
