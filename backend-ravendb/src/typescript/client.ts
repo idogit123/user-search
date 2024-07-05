@@ -6,8 +6,7 @@ dotenv.config() // to access enviroment variables
 
 const authOptions: IAuthOptions = {
     certificate: readFileSync(process.env.CERTIFICATE_PATH as string),
-    type: "pfx",
-    password: ""
+    type: "pfx", password: ""
 }
 
 const documentStore = new DocumentStore(
