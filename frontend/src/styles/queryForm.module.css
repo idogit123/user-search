@@ -23,3 +23,35 @@
 #input:focus {
     outline: var(--accent-blue) solid 1px;
 }
+
+#pageContainer {
+    height: 100%;
+    display: flex;
+    column-gap: .5rem;
+}
+
+#pageContainer p {
+    margin: 0 .5rem;
+    display: inline;
+}
+
+#pageContainer button {
+    font-size: 1.5rem;
+    height: 100%;
+    background-color: var(--accent-blue);
+    border-radius: 25%;
+    aspect-ratio: 1/1;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+#pageContainer div {
+    font-size: 1.5rem;
+    height: 100%;
+    aspect-ratio: 1/1;
+    background-color: var(--grey);
+    border-radius: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
