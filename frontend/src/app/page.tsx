@@ -4,7 +4,7 @@ import QueryResults from '@/components/QueryResults';
 import QueryContextProvider from '@/contexts/QueryContext';
 
 export default function Home(
-  { searchParams }: { searchParams: { query: string, sort: string, isDescending: boolean } }
+  { searchParams }: { searchParams: { page: number, query: string, sort: string, isDescending: boolean } }
 ) {
 
   return <QueryContextProvider>

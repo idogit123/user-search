@@ -6,11 +6,11 @@ import { QueryResult } from '@/types/QueryResult'
 import ColumnHeader from './ColumnHeader'
 
 export default async function QueryResults(
-    { searchParams: { query, sort, isDescending } }: 
-    { searchParams: { query: string, sort: string, isDescending: boolean } }
+    { searchParams: { page, query, sort, isDescending } }: 
+    { searchParams: { page: number, query: string, sort: string, isDescending: boolean } }
 ) {
     const response = await fetch(
-        `http://localhost:8080/users?query=${query}&sort=${sort}&isDescending=${isDescending}`
+        `http://localhost:8080/users/${page}?query=${query}&sort=${sort}&isDescending=${isDescending}`
     )
     const queryResult = (await response.json()) as QueryResult
 
