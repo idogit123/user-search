@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { createWriteStream } from 'fs'
+import { bulkInsertUsers } from './insert/mongodb.js'
 
 function createRandomUser() {
     return {
@@ -62,4 +63,4 @@ function createMultipleFiles(basePath, usersPerFile, fileAmount)
     }
 }
 
-createMultipleFiles('users', 1_000_000, 10)
+await bulkInsertUsers('./users/users9.jsonl')
