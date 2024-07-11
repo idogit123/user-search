@@ -17,12 +17,12 @@ export function useSetQuery(): Dispatch<SetStateAction<Query>> {
 
 export default function QueryContextProvider({ children }: { children: JSX.Element | JSX.Element[] })
 {
-    const [query, setQuery] = useState(new Query("", "firstName", false))
+    const [query, setQuery] = useState(new Query("", "firstName", false, 0))
     const router = useRouter()
 
     useEffect(() => {
         router.replace(
-            `?query=${query.query}&sort=${query.sort}&isDescending=${query.isOrderDescending}`
+            `?page=${query.page}&query=${query.query}&sort=${query.sort}&isDescending=${query.isOrderDescending}`
         )
     }, [query])
 
