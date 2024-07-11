@@ -4,6 +4,8 @@ import dotenv from "dotenv"
 import { Timer } from "./Timer.js"
 dotenv.config() // to access enviroment variables
 
+const PAGE_SIZE = 10
+
 const authOptions: IAuthOptions = {
     certificate: readFileSync(process.env.CERTIFICATE_PATH as string),
     type: "pfx",
@@ -19,12 +21,14 @@ documentStore.initialize()
 
 const timer = new Timer()
 
-export async function getUsers(query: string, sort: string, isDescending: string)
+export async function getUsers(query: string, sort: string, isDescending: string, page: number)
 {
     const session = documentStore.openSession()
 
     let usersQuery = session.query({ collection: 'users' })
         .addOrder(sort, isDescending == "true")
+        .skip(PAGE_SIZE * page)
+        .take(PAGE_SIZE)
 
     if (query.length > 0)
         usersQuery
