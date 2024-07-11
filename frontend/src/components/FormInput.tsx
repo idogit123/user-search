@@ -17,7 +17,8 @@ export default function FormInput()
         setQuery((oldQuery: Query) => new Query(
             newQuery,
             oldQuery.sort,
-            oldQuery.isOrderDescending
+            oldQuery.isOrderDescending,
+            0
         ))
     }
 
