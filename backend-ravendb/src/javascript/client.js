@@ -54,7 +54,7 @@ export async function bulkInsertUsers() {
         });
         for await (const line of readline) {
             const user = new User(JSON.parse(line));
-            // await bulkInsert.store(user)
+            await bulkInsert.store(user);
         }
         readline.close();
         await bulkInsert.finish();
