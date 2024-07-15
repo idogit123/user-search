@@ -1,7 +1,10 @@
-import styles from '../page.module.css'
-import EstimateTimer from '@/components/insert-page/EstimateTimer';
+"use server";
 
-export default function LoadingBulkInsertResultPage()
+import EstimateTimer from '@/components/insert-page/EstimateTimer';
+import styles from '../page.module.css'
+import { useRouter } from 'next/navigation';
+
+export default async function BulkInsertWaitPage()
 {
     return <main id={styles.page}>
         <div id={styles.form}>
