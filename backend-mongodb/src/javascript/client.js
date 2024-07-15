@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 import { User } from "./User.js";
 import { createInterface } from "readline";
-import { createReadStream } from "fs";
+import { createReadStream, readdirSync } from "fs";
 import { Timer } from "./Timer.js";
 import dotenv from "dotenv";
 dotenv.config();
@@ -37,16 +37,20 @@ export async function getUsers(query, sort, isDescending, page) {
     };
 }
 export async function bulkInsert() {
-    const readline = createInterface({
-        input: createReadStream('C:/Users/Ido Vitman Zilber/Documents/GitHub/user-search/user-generator/users1.jsonl'),
-        crlfDelay: Infinity
-    });
+    const userFiles = readdirSync(process.env.USERS_DIR);
     timer.start();
-    for await (const line of readline) {
-        const user = JSON.parse(line);
-        await usersCollection.insertOne(new User(user));
+    for (const userFilePath of userFiles) {
+        const readline = createInterface({
+            input: createReadStream(`${process.env.USERS_DIR}/${userFilePath}`),
+            crlfDelay: Infinity
+        });
+        for await (const line of readline) {
+            const user = new User(JSON.parse(line));
+            await usersCollection.insertOne(user);
+        }
+        readline.close();
+        console.log('FINISHED Inserting file: ', userFilePath);
     }
     timer.end();
-    console.log(await usersCollection.estimatedDocumentCount());
     return timer.getDuration();
 }
