@@ -58,7 +58,5 @@ export async function bulkInsert()
     }
     timer.end()
 
-    console.log(await usersCollection.estimatedDocumentCount())
-
     return timer.getDuration()
 }
