@@ -12,7 +12,7 @@ export default async function BulkInsertResultPage()
             resolve((await response.json()).durationInMs)
         }
         catch (error: unknown) {
-            console.log( (error as Error).name )
+            console.log( error )
         }   
     })
     
