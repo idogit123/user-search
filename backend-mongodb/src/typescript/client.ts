@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb"
 import { User } from "./User.js"
-import { createInterface } from "readline"
+import { createInterface, Interface } from "readline"
 import { createReadStream, readdirSync } from "fs"
 import { Timer } from "./Timer.js"
 import dotenv from "dotenv"
@@ -48,21 +48,37 @@ export async function bulkInsert()
     const userFiles = readdirSync(process.env.USERS_DIR as string)
 
     timer.start()
-    for (const userFilePath of userFiles)
+    for await (const userFilePath of userFiles)
     {
         const readline = createInterface({
             input: createReadStream(`${process.env.USERS_DIR}/${userFilePath}`),
             crlfDelay: Infinity
         })
 
-        readline.on('line', async (line: string) => {
-            const user = new User(JSON.parse(line))
-            await usersCollection.insertOne(user)
-        })
+        const MAX_BATCH_SIZE = 1000
+        let batch: User[] = []
 
-        readline.on('close', () => {
-            console.log('FINISHED Inserting file: ', userFilePath)
-        })
+        for await (const line of readline)
+        {
+            const user = new User(JSON.parse(line))
+            batch.push(user)
+
+            if (batch.length >= MAX_BATCH_SIZE)
+            {
+                await usersCollection.insertMany(batch)
+                batch = []
+            }
+        }
+
+        // insert remaining users
+        if (batch.length > 0)
+        {
+            await usersCollection.insertMany(batch)
+            console.log(`insert remaining users, size: ${batch.length}`)
+        }
+
+        console.log('insered file: ', userFilePath)
+        readline.close()
     }
     timer.end()
 

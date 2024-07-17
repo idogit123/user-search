@@ -39,17 +39,28 @@ export async function getUsers(query, sort, isDescending, page) {
 export async function bulkInsert() {
     const userFiles = readdirSync(process.env.USERS_DIR);
     timer.start();
-    for (const userFilePath of userFiles) {
+    for await (const userFilePath of userFiles) {
         const readline = createInterface({
             input: createReadStream(`${process.env.USERS_DIR}/${userFilePath}`),
             crlfDelay: Infinity
         });
+        const MAX_BATCH_SIZE = 1000;
+        let batch = [];
         for await (const line of readline) {
             const user = new User(JSON.parse(line));
-            await usersCollection.insertOne(user);
+            batch.push(user);
+            if (batch.length >= MAX_BATCH_SIZE) {
+                await usersCollection.insertMany(batch);
+                console.log(`inserted batch, size: ${batch.length}`);
+                batch = [];
+            }
+        }
+        // insert remaining users
+        if (batch.length > 0) {
+            await usersCollection.insertMany(batch);
+            console.log(`insert remaining users, size: ${batch.length}`);
         }
         readline.close();
-        console.log('FINISHED Inserting file: ', userFilePath);
     }
     timer.end();
     return timer.getDuration();
