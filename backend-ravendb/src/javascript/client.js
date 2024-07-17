@@ -63,4 +63,3 @@ export async function bulkInsertUsers() {
     timer.end();
     return timer.getDuration();
 }
-//# sourceMappingURL=client.js.map

@@ -8,7 +8,12 @@ export default async function BulkInsertPage()
 {
     async function bulkInsert() {
         "use server"
-        redirect('/insert/result')
+
+        await fetch('http://localhost:8080/insert', {
+            'cache': 'no-cache'
+        })
+
+        redirect('/insert/wait')
     }
 
     return <main id={styles.page}>
