@@ -55,14 +55,14 @@ export async function bulkInsert()
             crlfDelay: Infinity
         })
 
-        for await (const line of readline)
-        {
+        readline.on('line', async (line: string) => {
             const user = new User(JSON.parse(line))
             await usersCollection.insertOne(user)
-        }
-        
-        readline.close()
-        console.log('FINISHED Inserting file: ', userFilePath)
+        })
+
+        readline.on('close', () => {
+            console.log('FINISHED Inserting file: ', userFilePath)
+        })
     }
     timer.end()
 
