@@ -19,12 +19,12 @@ documentStore.initialize()
 
 const timer = new Timer()
 
-export async function getUsers(query: string, sort: string, isDescending: string)
+export async function getUsers(query: string, sort: string, isDescending: boolean)
 {
     const session = documentStore.openSession()
 
     let usersQuery = session.query({ collection: 'users' })
-        .addOrder(sort, isDescending == "true")
+        .addOrder(sort, isDescending)
 
     if (query.length > 0)
         usersQuery
