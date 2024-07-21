@@ -17,7 +17,7 @@ app.get('/users/:page', async (req, res) => {
 });
 app.get('/insert', async (req, res) => {
     bulkInsertStatus.status = 'pending';
-    res.status(200).send({ bulkInsert: 'pending' });
+    res.status(200).send();
     bulkInsertStatus.duration = await bulkInsertUsers();
     bulkInsertStatus.status = 'success';
 });
