@@ -17,7 +17,7 @@ const usersDB = client.db( databaseInfo.databaseName )
 const usersCollection = usersDB.collection<User>( databaseInfo.collectionName )
 const timer = new Timer()
 
-export async function getUsers(query: string, sort: string, isDescending: string, page: number) {
+export async function getUsers(query: string, sort: string, isDescending: boolean, page: number) {
     const PAGE_SIZE = 10
     const usersQuery = usersCollection.find<User>(
         {
@@ -29,7 +29,7 @@ export async function getUsers(query: string, sort: string, isDescending: string
                 { 'job.title': { $regex: new RegExp("^" + query, "i") } }
             ],
         })
-        .sort(sort, isDescending == "true" ? -1 : 1)
+        .sort(sort, isDescending ? -1 : 1)
         .skip(PAGE_SIZE * page)
         .limit(PAGE_SIZE)
     
