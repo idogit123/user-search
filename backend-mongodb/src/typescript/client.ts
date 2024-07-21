@@ -15,12 +15,12 @@ const usersDB = client.db( databaseInfo.databaseName )
 const usersCollection = usersDB.collection<User>( databaseInfo.collectionName )
 const timer = new Timer()
 
-export async function getUsers(query: string, sort: string, isDescending: string) {
+export async function getUsers(query: string, sort: string, isDescending: boolean) {
     const usersQuery = usersCollection.find<User>(
         {
             'firstName': { $regex: new RegExp("^" + query, "i") }
         })
-        .sort(sort, isDescending == "true" ? -1 : 1)
+        .sort(sort, isDescending ? -1 : 1)
     
     timer.start()
     const users = await usersQuery.toArray()
