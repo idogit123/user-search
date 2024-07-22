@@ -18,6 +18,7 @@ export async function getUsers(query, sort, isDescending, page) {
     const PAGE_SIZE = 10;
     const session = documentStore.openSession();
     let usersQuery = session.query({ collection: 'users' })
+        .addOrder(sort, isDescending)
         .skip(PAGE_SIZE * page)
         .take(PAGE_SIZE);
     if (query.length > 0)
@@ -31,10 +32,6 @@ export async function getUsers(query, sort, isDescending, page) {
             .whereStartsWith('contact.instegram', query)
             .orElse()
             .whereStartsWith('job.title', query);
-    if (isDescending == "true")
-        usersQuery.orderByDescending(sort);
-    else
-        usersQuery.orderBy(sort);
     timer.start();
     const users = await usersQuery.all();
     timer.end();
@@ -45,8 +42,15 @@ export async function getUsers(query, sort, isDescending, page) {
 }
 export async function bulkInsertUsers() {
     const userFiles = readdirSync(process.env.USERS_DIR);
+    var tasks = [];
     timer.start();
     for (const userFilePath of userFiles) {
+        tasks.push(bulkInsertFile(userFilePath));
+    }
+    await Promise.all(tasks);
+    timer.end();
+    return timer.getDuration();
+    async function bulkInsertFile(userFilePath) {
         const bulkInsert = documentStore.bulkInsert();
         const readline = createInterface({
             input: createReadStream(`${process.env.USERS_DIR}/${userFilePath}`),
@@ -60,6 +64,4 @@ export async function bulkInsertUsers() {
         await bulkInsert.finish();
         console.log('FINISHED Inserting file: ', userFilePath);
     }
-    timer.end();
-    return timer.getDuration();
 }

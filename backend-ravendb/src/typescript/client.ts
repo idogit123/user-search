@@ -58,26 +58,31 @@ export async function bulkInsertUsers()
 {
     const userFiles = readdirSync(process.env.USERS_DIR as string)
 
+    var tasks = [];
     timer.start()
     for (const userFilePath of userFiles)
     {
+        tasks.push(bulkInsertFile(userFilePath));
+    }
+    await Promise.all(tasks);
+    timer.end()
+
+    return timer.getDuration()
+
+    async function bulkInsertFile(userFilePath: string) {
         const bulkInsert = documentStore.bulkInsert()
         const readline = createInterface({
             input: createReadStream(`${process.env.USERS_DIR}/${userFilePath}`),
             crlfDelay: Infinity
         })
 
-        for await (const line of readline)
-        {
+        for await (const line of readline) {
             const user = new User(JSON.parse(line))
             await bulkInsert.store(user)
         }
-        
+
         readline.close()
         await bulkInsert.finish()
         console.log('FINISHED Inserting file: ', userFilePath)
     }
-    timer.end()
-
-    return timer.getDuration()
 }
