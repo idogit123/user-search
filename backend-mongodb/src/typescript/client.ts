@@ -1,9 +1,9 @@
 import { MongoClient } from "mongodb"
 import { User } from "./User.js"
-import { createInterface, Interface } from "readline"
-import { createReadStream, readdirSync } from "fs"
 import { Timer } from "./Timer.js"
 import dotenv from "dotenv"
+import { createReadStream, readdirSync } from "fs"
+import { createInterface } from "readline"
 dotenv.config()
 
 const databaseInfo = {
@@ -21,13 +21,7 @@ export async function getUsers(query: string, sort: string, isDescending: boolea
     const PAGE_SIZE = 10
     const usersQuery = usersCollection.find<User>(
         {
-            $or: [
-                { 'firstName': { $regex: new RegExp("^" + query, "i") } },
-                { 'lastName': { $regex: new RegExp("^" + query, "i") } },
-                { 'address.city': { $regex: new RegExp("^" + query, "i") } },
-                { 'contact.instegram': { $regex: new RegExp("^" + query, "i") } },
-                { 'job.title': { $regex: new RegExp("^" + query, "i") } }
-            ],
+            'firstName': { $regex: new RegExp("^" + query, "i") }
         })
         .sort(sort, isDescending ? -1 : 1)
         .skip(PAGE_SIZE * page)
