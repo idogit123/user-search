@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx tsc && node src/javascript/index.js",
+    "insert": "npx tsc && node src/javascript/insert.js",
     "database": "start mongod"
   },
   "keywords": [],
