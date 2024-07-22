@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb"
+import { InsertManyResult, MongoClient } from "mongodb"
 import { User } from "./User.js"
 import { Timer } from "./Timer.js"
 import dotenv from "dotenv"
@@ -52,6 +52,7 @@ export async function bulkInsert()
         const MAX_BATCH_SIZE = 1000
         let batch: User[] = []
 
+        let lastTask = new Promise<any>((resolve, reject) => resolve(1));
         for await (const line of readline)
         {
             const user = new User(JSON.parse(line))
@@ -59,19 +60,20 @@ export async function bulkInsert()
 
             if (batch.length >= MAX_BATCH_SIZE)
             {
-                await usersCollection.insertMany(batch)
+                await lastTask;
+                lastTask = usersCollection.insertMany(batch)
                 batch = []
             }
         }
 
+        await lastTask;
         // insert remaining users
         if (batch.length > 0)
         {
             await usersCollection.insertMany(batch)
-            console.log(`insert remaining users, size: ${batch.length}`)
         }
 
-        console.log('insered file: ', userFilePath)
+        console.log('inserted file: ', userFilePath)
         readline.close()
     }
     timer.end()

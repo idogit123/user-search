@@ -1,9 +1,9 @@
 import { MongoClient } from "mongodb";
 import { User } from "./User.js";
-import { createInterface } from "readline";
-import { createReadStream, readdirSync } from "fs";
 import { Timer } from "./Timer.js";
 import dotenv from "dotenv";
+import { createReadStream, readdirSync } from "fs";
+import { createInterface } from "readline";
 dotenv.config();
 const databaseInfo = {
     serverPath: process.env.SERVER_PATH,
@@ -17,15 +17,9 @@ const timer = new Timer();
 export async function getUsers(query, sort, isDescending, page) {
     const PAGE_SIZE = 10;
     const usersQuery = usersCollection.find({
-        $or: [
-            { 'firstName': { $regex: new RegExp("^" + query, "i") } },
-            { 'lastName': { $regex: new RegExp("^" + query, "i") } },
-            { 'address.city': { $regex: new RegExp("^" + query, "i") } },
-            { 'contact.instegram': { $regex: new RegExp("^" + query, "i") } },
-            { 'job.title': { $regex: new RegExp("^" + query, "i") } }
-        ],
+        'firstName': { $regex: new RegExp("^" + query, "i") }
     })
-        .sort(sort, isDescending == "true" ? -1 : 1)
+        .sort(sort, isDescending ? -1 : 1)
         .skip(PAGE_SIZE * page)
         .limit(PAGE_SIZE);
     timer.start();
@@ -46,20 +40,22 @@ export async function bulkInsert() {
         });
         const MAX_BATCH_SIZE = 1000;
         let batch = [];
+        let lastTask = new Promise((resolve, reject) => resolve(1));
         for await (const line of readline) {
             const user = new User(JSON.parse(line));
             batch.push(user);
             if (batch.length >= MAX_BATCH_SIZE) {
-                await usersCollection.insertMany(batch);
-                console.log(`inserted batch, size: ${batch.length}`);
+                await lastTask;
+                lastTask = usersCollection.insertMany(batch);
                 batch = [];
             }
         }
+        await lastTask;
         // insert remaining users
         if (batch.length > 0) {
             await usersCollection.insertMany(batch);
-            console.log(`insert remaining users, size: ${batch.length}`);
         }
+        console.log('inserted file: ', userFilePath);
         readline.close();
     }
     timer.end();
