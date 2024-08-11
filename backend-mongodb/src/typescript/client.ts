@@ -1,7 +1,5 @@
 import { MongoClient } from "mongodb"
 import { User } from "./User.js"
-import { createInterface, Interface } from "readline"
-import { createReadStream, readdirSync } from "fs"
 import { Timer } from "./Timer.js"
 import dotenv from "dotenv"
 dotenv.config()
