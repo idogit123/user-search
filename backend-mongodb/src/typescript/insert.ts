@@ -26,29 +26,13 @@ export async function bulkInsertUsers()
             crlfDelay: Infinity
         })
 
-        const MAX_BATCH_SIZE = 1000
-        let batch: User[] = []
-
         for await (const line of readline)
         {
             const user = new User(JSON.parse(line))
-            batch.push(user)
-
-            if (batch.length >= MAX_BATCH_SIZE)
-            {
-                await usersCollection.insertMany(batch)
-                batch = []
-            }
+            await usersCollection.insertOne(user)
         }
 
-        // insert remaining users
-        if (batch.length > 0)
-        {
-            await usersCollection.insertMany(batch)
-            console.log(`insert remaining users, size: ${batch.length}`)
-        }
-
-        console.log('insered file: ', userFilePath)
+        console.log('FINISHED Inserting file: ', userFilePath)
         readline.close()
     }
 }
