@@ -3,7 +3,7 @@ import { readFileSync } from "fs"
 import dotenv from "dotenv"
 import { User } from "./User.js"
 import { createInterface } from "readline"
-import { createReadStream, readdirSync } from 'fs'
+import { createReadStream } from 'fs'
 import { Timer } from "./Timer.js"
 dotenv.config()
 
@@ -22,26 +22,20 @@ documentStore.initialize()
 
 export async function bulkInsertUsers()
 {
-    const userFiles = readdirSync(process.env.USERS_DIR as string)
+    const bulkInsert = documentStore.bulkInsert()
+    const readline = createInterface({
+        input: createReadStream(`${process.env.USERS_DIR}/users.jsonl`),
+        crlfDelay: Infinity
+    })
 
-    for (const userFilePath of userFiles)
+    for await (const line of readline)
     {
-        const bulkInsert = documentStore.bulkInsert()
-        const readline = createInterface({
-            input: createReadStream(`${process.env.USERS_DIR}/${userFilePath}`),
-            crlfDelay: Infinity
-        })
-
-        for await (const line of readline)
-        {
-            const user = new User(JSON.parse(line))
-            await bulkInsert.store(user)
-        }
-        
-        readline.close()
-        await bulkInsert.finish()
-        console.log('FINISHED Inserting file: ', userFilePath)
+        const user = new User(JSON.parse(line))
+        await bulkInsert.store(user)
     }
+    
+    readline.close()
+    await bulkInsert.finish()
 }
 
 const timer = new Timer()
@@ -49,6 +43,6 @@ const timer = new Timer()
 timer.start()
 await bulkInsertUsers()
 timer.end()
-console.log("Bulk Insert Took: " + timer.getDuration())
+console.log("duration: " + timer.getDuration())
 
 documentStore.dispose()
