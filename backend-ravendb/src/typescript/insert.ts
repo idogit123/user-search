@@ -1,4 +1,4 @@
-import { DocumentStore, IAuthOptions } from "ravendb"
+import { DocumentStore, IAuthOptions, IMetadataDictionary } from "ravendb"
 import { readFileSync } from "fs"
 import dotenv from "dotenv"
 import { User } from "./User.js"
@@ -31,10 +31,14 @@ export async function bulkInsertUsers()
             crlfDelay: Infinity
         })
 
+        const metadata = { "@collection": "Users" } as IMetadataDictionary;
         for await (const line of readline)
         {
             const user = new User(JSON.parse(line))
-            await bulkInsert.store(user)
+            const id = user.getId()
+            if (!bulkInsert.tryStoreSync(user, id, metadata)) {
+                await bulkInsert.store(user, id, metadata)
+            }
         }
         
         readline.close()
@@ -42,3 +46,7 @@ export async function bulkInsertUsers()
         console.log('FINISHED Inserting file: ', userFilePath)
     }
 }
+
+await bulkInsertUsers()
+
+documentStore.dispose()

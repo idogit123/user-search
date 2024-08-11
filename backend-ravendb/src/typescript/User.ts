@@ -1,3 +1,6 @@
+
+let counter=0;
+
 export class User {
     firstName: string
     lastName: string
@@ -11,6 +14,10 @@ export class User {
         this.address = new Address(args.address)
         this.contact = new Contact(args.contact)
         this.job = new Job(args.job)
+    }
+
+    getId() {
+        return "users/" + (++counter);
     }
 }
 
