@@ -13,7 +13,7 @@ export class User {
         this.job = new Job(args.job);
     }
     getId() {
-        return "users/" + (++counter);
+        return "users/" + (++counter).toString().padStart(8, '0');
     }
 }
 export class Address {

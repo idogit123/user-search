@@ -1,6 +1,3 @@
-
-let counter=0;
-
 export class User {
     firstName: string
     lastName: string
@@ -16,8 +13,8 @@ export class User {
         this.job = new Job(args.job)
     }
 
-    getId() {
-        return "users/" + (++counter);
+    getId(counter: number) {
+        return "users/" + (counter).toString().padStart(8, '0');
     }
 }
 

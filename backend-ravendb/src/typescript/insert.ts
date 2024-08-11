@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 import { User } from "./User.js"
 import { createInterface } from "readline"
 import { createReadStream, readdirSync } from 'fs'
+import { Timer } from "./Timer.js"
 dotenv.config() // to access enviroment variables
 
 const authOptions: IAuthOptions = {
@@ -21,32 +22,35 @@ documentStore.initialize()
 
 export async function bulkInsertUsers()
 {
-    const userFiles = readdirSync(process.env.USERS_DIR as string)
+    const bulkInsert = documentStore.bulkInsert()
+    const readline = createInterface({
+        input: createReadStream(`${process.env.USERS_DIR}/users.jsonl`),
+        crlfDelay: Infinity
+    })
 
-    for (const userFilePath of userFiles)
+    const metadata = { "@collection": "Users" } as IMetadataDictionary;
+    let userCounter = 0
+    for await (const line of readline)
     {
-        const bulkInsert = documentStore.bulkInsert()
-        const readline = createInterface({
-            input: createReadStream(`${process.env.USERS_DIR}/${userFilePath}`),
-            crlfDelay: Infinity
-        })
-
-        const metadata = { "@collection": "Users" } as IMetadataDictionary;
-        for await (const line of readline)
+        const user = new User(JSON.parse(line))
+        const id = user.getId(userCounter)
+        if (!bulkInsert.tryStoreSync(user, id, metadata)) 
         {
-            const user = new User(JSON.parse(line))
-            const id = user.getId()
-            if (!bulkInsert.tryStoreSync(user, id, metadata)) {
-                await bulkInsert.store(user, id, metadata)
-            }
+            await bulkInsert.store(user, id, metadata)
         }
-        
-        readline.close()
-        await bulkInsert.finish()
-        console.log('FINISHED Inserting file: ', userFilePath)
+
+        userCounter++
     }
+
+    readline.close()
+    await bulkInsert.finish()
 }
 
+const timer = new Timer();
+
+timer.start()
 await bulkInsertUsers()
+timer.end()
+console.log("duration:", timer.getDuration());
 
 documentStore.dispose()

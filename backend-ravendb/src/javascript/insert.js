@@ -14,10 +14,11 @@ const documentStore = new DocumentStore(process.env.SERVER_ADDRESS, process.env.
 documentStore.initialize();
 export async function bulkInsertUsers() {
     const userFiles = readdirSync(process.env.USERS_DIR);
-    for (const userFilePath of userFiles) {
+    //for (const userFilePath of userFiles)
+    {
         const bulkInsert = documentStore.bulkInsert();
         const readline = createInterface({
-            input: createReadStream(`${process.env.USERS_DIR}/${userFilePath}`),
+            input: createReadStream(`${process.env.USERS_DIR}/users.jsonl`),
             crlfDelay: Infinity
         });
         const metadata = { "@collection": "Users" };
@@ -30,8 +31,10 @@ export async function bulkInsertUsers() {
         }
         readline.close();
         await bulkInsert.finish();
-        console.log('FINISHED Inserting file: ', userFilePath);
     }
 }
+let start = new Date();
 await bulkInsertUsers();
+const duration = new Date().getTime() - start.getTime();
+console.log("duration", duration);
 documentStore.dispose();

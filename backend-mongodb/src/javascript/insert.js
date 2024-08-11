@@ -25,7 +25,7 @@ export async function bulkInsertUsers() {
             const user = new User(JSON.parse(line));
             batch.push(user);
             if (batch.length >= MAX_BATCH_SIZE) {
-                await usersCollection.insertMany(batch);
+                await usersCollection.insertMany(batch, { writeConcern: { j: true } });
                 batch = [];
             }
         }
@@ -38,5 +38,8 @@ export async function bulkInsertUsers() {
         readline.close();
     }
 }
+let start = new Date();
 await bulkInsertUsers();
+const duration = new Date().getTime() - start.getTime();
+console.log("duration", duration);
 client.close();
