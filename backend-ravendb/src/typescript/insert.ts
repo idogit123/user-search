@@ -28,7 +28,7 @@ export async function bulkInsertUsers()
         crlfDelay: Infinity
     })
 
-    const metadata = { "@collection": "Users" } as IMetadataDictionary;
+    const metadata = { "@collection": "Users", "Raven-Node-Type": "User" } as IMetadataDictionary;
     let userCounter = 0
     for await (const line of readline)
     {

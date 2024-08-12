@@ -1,8 +1,9 @@
 import { MongoClient } from "mongodb";
 import { User } from "./User.js";
 import { createInterface } from "readline";
-import { createReadStream, readdirSync } from "fs";
+import { createReadStream } from "fs";
 import dotenv from "dotenv";
+import { Timer } from "./Timer.js";
 dotenv.config();
 const databaseInfo = {
     serverPath: process.env.SERVER_PATH,
@@ -13,33 +14,30 @@ const client = new MongoClient(databaseInfo.serverPath);
 const usersDB = client.db(databaseInfo.databaseName);
 const usersCollection = usersDB.collection(databaseInfo.collectionName);
 export async function bulkInsertUsers() {
-    const userFiles = readdirSync(process.env.USERS_DIR);
-    for await (const userFilePath of userFiles) {
-        const readline = createInterface({
-            input: createReadStream(`${process.env.USERS_DIR}/${userFilePath}`),
-            crlfDelay: Infinity
-        });
-        const MAX_BATCH_SIZE = 1000;
-        let batch = [];
-        for await (const line of readline) {
-            const user = new User(JSON.parse(line));
-            batch.push(user);
-            if (batch.length >= MAX_BATCH_SIZE) {
-                await usersCollection.insertMany(batch, { writeConcern: { j: true } });
-                batch = [];
-            }
-        }
-        // insert remaining users
-        if (batch.length > 0) {
+    const readline = createInterface({
+        input: createReadStream(`${process.env.USERS_DIR}/users.jsonl`),
+        crlfDelay: Infinity
+    });
+    const MAX_BATCH_SIZE = 1000;
+    let batch = [];
+    for await (const line of readline) {
+        const user = new User(JSON.parse(line));
+        batch.push(user);
+        if (batch.length >= MAX_BATCH_SIZE) {
             await usersCollection.insertMany(batch);
-            console.log(`insert remaining users, size: ${batch.length}`);
+            batch = [];
         }
-        console.log('insered file: ', userFilePath);
-        readline.close();
     }
+    // insert remaining users
+    if (batch.length > 0) {
+        await usersCollection.insertMany(batch);
+        console.log(`insert remaining users, size: ${batch.length}`);
+    }
+    readline.close();
 }
-let start = new Date();
+const timer = new Timer();
+timer.start();
 await bulkInsertUsers();
-const duration = new Date().getTime() - start.getTime();
-console.log("duration", duration);
+timer.end();
+console.log("duration:", timer.getDuration());
 client.close();
