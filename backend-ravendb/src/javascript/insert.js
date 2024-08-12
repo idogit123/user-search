@@ -1,6 +1,7 @@
 import { DocumentStore } from "ravendb";
 import { readFileSync } from "fs";
 import dotenv from "dotenv";
+import { User } from "./User.js";
 import { createInterface } from "readline";
 import { createReadStream } from 'fs';
 import { Timer } from "./Timer.js";
@@ -21,8 +22,8 @@ export async function bulkInsertUsers() {
     const metadata = { "@collection": "Users", "Raven-Node-Type": "User" };
     let userCounter = 0;
     for await (const line of readline) {
-        const user = JSON.parse(line);
-        const id = "users/" + (userCounter).toString().padStart(8, '0');
+        const user = new User(JSON.parse(line));
+        const id = user.getId(userCounter);
         if (!bulkInsert.tryStoreSync(user, id, metadata)) {
             await bulkInsert.store(user, id, metadata);
         }
