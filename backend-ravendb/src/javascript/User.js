@@ -11,6 +11,9 @@ export class User {
         this.contact = new Contact(args.contact);
         this.job = new Job(args.job);
     }
+    getId(counter) {
+        return "users/" + (counter).toString().padStart(8, '0');
+    }
 }
 export class Address {
     country;

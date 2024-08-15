@@ -20,13 +20,17 @@ export async function bulkInsertUsers()
     })
 
     let counter = 0
+    let session = documentStore.openSession()
     for await (const line of readline)
     {
         const user = new User(JSON.parse(line))
-
-        const session = documentStore.openSession()
         await session.store<User>(user, user.getId(counter))
-        await session.saveChanges()      
+        
+        if (counter % 1000 == 0) // save changes every 1000 users
+        {
+            await session.saveChanges()  
+            session = documentStore.openSession()
+        }
         
         counter++
     }

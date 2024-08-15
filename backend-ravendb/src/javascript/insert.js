@@ -1,30 +1,30 @@
 import { DocumentStore } from "ravendb";
-import { readFileSync } from "fs";
 import dotenv from "dotenv";
 import { User } from "./User.js";
 import { createInterface } from "readline";
 import { createReadStream } from 'fs';
 import { Timer } from "./Timer.js";
 dotenv.config();
-const authOptions = {
-    certificate: readFileSync(process.env.CERTIFICATE_PATH),
-    type: "pfx",
-    password: ""
-};
-const documentStore = new DocumentStore(process.env.SERVER_ADDRESS, process.env.DATABASE_NAME, authOptions);
+const documentStore = new DocumentStore(process.env.SERVER_ADDRESS, process.env.DATABASE_NAME);
 documentStore.initialize();
 export async function bulkInsertUsers() {
-    const bulkInsert = documentStore.bulkInsert();
     const readline = createInterface({
         input: createReadStream(`${process.env.USERS_DIR}/users.jsonl`),
         crlfDelay: Infinity
     });
+    let counter = 0;
+    let session = documentStore.openSession();
     for await (const line of readline) {
         const user = new User(JSON.parse(line));
-        await bulkInsert.store(user);
+        await session.store(user, user.getId(counter));
+        if (counter % 1000 == 0) // save changes every 1000 users
+         {
+            await session.saveChanges();
+            session = documentStore.openSession();
+        }
+        counter++;
     }
     readline.close();
-    await bulkInsert.finish();
 }
 const timer = new Timer();
 timer.start();
