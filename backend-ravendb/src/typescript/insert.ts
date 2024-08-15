@@ -14,20 +14,24 @@ documentStore.initialize()
 
 export async function bulkInsertUsers()
 {
-    const session = documentStore.openSession()
     const readline = createInterface({
         input: createReadStream(`${process.env.USERS_DIR}/users.jsonl`),
         crlfDelay: Infinity
     })
 
+    let counter = 0
     for await (const line of readline)
     {
         const user = new User(JSON.parse(line))
-        await session.store(user)
+
+        const session = documentStore.openSession()
+        await session.store<User>(user, user.getId(counter))
+        await session.saveChanges()      
+        
+        counter++
     }
-    
+
     readline.close()
-    await session.saveChanges()
 }
 
 const timer = new Timer()
