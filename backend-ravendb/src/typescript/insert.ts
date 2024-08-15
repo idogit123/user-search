@@ -1,5 +1,4 @@
-import { DocumentStore, IAuthOptions } from "ravendb"
-import { readFileSync } from "fs"
+import { DocumentStore } from "ravendb"
 import dotenv from "dotenv"
 import { User } from "./User.js"
 import { createInterface } from "readline"
@@ -7,22 +6,15 @@ import { createReadStream } from 'fs'
 import { Timer } from "./Timer.js"
 dotenv.config()
 
-const authOptions: IAuthOptions = {
-    certificate: readFileSync(process.env.CERTIFICATE_PATH as string),
-    type: "pfx",
-    password: ""
-}
-
 const documentStore = new DocumentStore(
     process.env.SERVER_ADDRESS as string,
     process.env.DATABASE_NAME as string, 
-    authOptions
 )
 documentStore.initialize()
 
 export async function bulkInsertUsers()
 {
-    const bulkInsert = documentStore.bulkInsert()
+    const session = documentStore.openSession()
     const readline = createInterface({
         input: createReadStream(`${process.env.USERS_DIR}/users.jsonl`),
         crlfDelay: Infinity
@@ -31,11 +23,11 @@ export async function bulkInsertUsers()
     for await (const line of readline)
     {
         const user = new User(JSON.parse(line))
-        await bulkInsert.store(user)
+        await session.store(user)
     }
     
     readline.close()
-    await bulkInsert.finish()
+    await session.saveChanges()
 }
 
 const timer = new Timer()
