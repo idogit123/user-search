@@ -42,7 +42,6 @@ export async function bulkInsertUsers()
     if (batch.length > 0)
     {
         await usersCollection.insertMany(batch)
-        console.log(`insert remaining users, size: ${batch.length}`)
     }
 
     readline.close()
