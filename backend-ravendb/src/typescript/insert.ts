@@ -35,6 +35,7 @@ export async function bulkInsertUsers()
         counter++
     }
 
+    await session.saveChanges()  
     readline.close()
 }
 
