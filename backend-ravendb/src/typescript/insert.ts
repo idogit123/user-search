@@ -12,7 +12,7 @@ const documentStore = new DocumentStore(
 )
 documentStore.initialize()
 
-export async function bulkInsertUsers()
+async function bulkInsertUsers()
 {
     const readline = createInterface({
         input: createReadStream(`${process.env.USERS_DIR}/users.jsonl`),
@@ -20,22 +20,18 @@ export async function bulkInsertUsers()
     })
 
     let counter = 0
-    let session = documentStore.openSession()
+    
     for await (const line of readline)
     {
         const user = new User(JSON.parse(line))
-        await session.store<User>(user, user.getId(counter))
         
-        if (counter % 1000 == 0) // save changes every 1000 users
-        {
-            await session.saveChanges()  
-            session = documentStore.openSession()
-        }
+        const session = documentStore.openSession()
+        await session.store<User>(user, user.getId(counter))
+        await session.saveChanges()
         
         counter++
     }
 
-    await session.saveChanges()  
     readline.close()
 }
 
