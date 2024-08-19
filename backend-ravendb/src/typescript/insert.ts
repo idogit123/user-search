@@ -1,22 +1,14 @@
-import { DocumentStore, IAuthOptions, IMetadataDictionary } from "ravendb"
-import { readFileSync } from "fs"
+import { DocumentStore, IMetadataDictionary } from "ravendb"
 import dotenv from "dotenv"
 import { User } from "./User.js"
 import { createInterface } from "readline"
-import { createReadStream, readdirSync } from 'fs'
+import { createReadStream } from 'fs'
 import { Timer } from "./Timer.js"
 dotenv.config() // to access enviroment variables
 
-const authOptions: IAuthOptions = {
-    certificate: readFileSync(process.env.CERTIFICATE_PATH as string),
-    type: "pfx",
-    password: ""
-}
-
 const documentStore = new DocumentStore(
     process.env.SERVER_ADDRESS as string,
-    process.env.DATABASE_NAME as string, 
-    authOptions
+    process.env.DATABASE_NAME as string
 )
 documentStore.initialize()
 
@@ -28,15 +20,14 @@ export async function bulkInsertUsers()
         crlfDelay: Infinity
     })
 
-    const metadata = { "@collection": "Users", "Raven-Node-Type": "User" } as IMetadataDictionary;
     let userCounter = 0
     for await (const line of readline)
     {
         const user = new User(JSON.parse(line))
         const id = user.getId(userCounter)
-        if (!bulkInsert.tryStoreSync(user, id, metadata)) 
+        if (!bulkInsert.tryStoreSync(user, id)) 
         {
-            await bulkInsert.store(user, id, metadata)
+            await bulkInsert.store(user, id)
         }
 
         userCounter++
@@ -47,7 +38,6 @@ export async function bulkInsertUsers()
 }
 
 const timer = new Timer();
-
 timer.start()
 await bulkInsertUsers()
 timer.end()
