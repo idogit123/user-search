@@ -24,11 +24,7 @@ export async function bulkInsertUsers()
     for await (const line of readline)
     {
         const user = new User(JSON.parse(line))
-        const id = user.getId(userCounter)
-        if (!bulkInsert.tryStoreSync(user, id)) 
-        {
-            await bulkInsert.store(user, id)
-        }
+        await bulkInsert.store(user, user.getId(userCounter))
 
         userCounter++
     }
