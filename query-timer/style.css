@@ -9,6 +9,7 @@
 
 body {
     background-color: var(--dark-grey);
+    color: var(--text);
 }
 
 #input-section {
@@ -47,4 +48,9 @@ input {
 
 input:focus {
     outline: var(--accent-blue) solid 1px;
+}
+
+#timer-section {
+    display: flex;
+    justify-content: space-around;
 }

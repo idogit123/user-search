@@ -14,15 +14,9 @@ const timer = new Timer();
 export async function getUsers(query, sort, isDescending, page) {
     const PAGE_SIZE = 10;
     const usersQuery = usersCollection.find({
-        $or: [
-            { 'firstName': { $regex: new RegExp("^" + query, "i") } },
-            { 'lastName': { $regex: new RegExp("^" + query, "i") } },
-            { 'address.city': { $regex: new RegExp("^" + query, "i") } },
-            { 'contact.instegram': { $regex: new RegExp("^" + query, "i") } },
-            { 'job.title': { $regex: new RegExp("^" + query, "i") } }
-        ],
+        'firstName': { $regex: new RegExp("^" + query, "i") }
     })
-        .sort(sort, isDescending == "true" ? -1 : 1)
+        .sort(sort, isDescending ? -1 : 1)
         .skip(PAGE_SIZE * page)
         .limit(PAGE_SIZE);
     timer.start();
