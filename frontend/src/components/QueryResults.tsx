@@ -10,7 +10,7 @@ export default async function QueryResults(
     { searchParams: { page: number, query: string, sort: string, isDescending: boolean } }
 ) {
     const response = await fetch(
-        `http://localhost:8080/users/${page}?query=${query}&sort=${sort}&isDescending=${isDescending}`,
+        `http://localhost:8080/users/?query=${query}&sort=${sort}&isDescending=${isDescending}`,
         {
             "cache": "no-cache"
         }

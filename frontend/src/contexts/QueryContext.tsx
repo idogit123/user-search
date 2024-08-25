@@ -22,7 +22,7 @@ export default function QueryContextProvider({ children }: { children: JSX.Eleme
 
     useEffect(() => {
         router.replace(
-            `?page=${query.page}&query=${query.query}&sort=${query.sort}&isDescending=${query.isOrderDescending}`
+            `?query=${query.query}&sort=${query.sort}&isDescending=${query.isOrderDescending}`
         )
     }, [query])
 
