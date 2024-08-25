@@ -19,7 +19,7 @@ documentStore.initialize()
 
 const timer = new Timer()
 
-export async function getUsers(query: string, sort: string, isDescending: string, page: number)
+export async function getUsers(query: string, sort: string, isDescending: boolean, page: number)
 {
     const PAGE_SIZE = 10
     const session = documentStore.openSession()
@@ -27,24 +27,11 @@ export async function getUsers(query: string, sort: string, isDescending: string
     let usersQuery = session.query({ collection: 'users' })
         .skip(PAGE_SIZE * page)
         .take(PAGE_SIZE)
+        .addOrder(sort, isDescending)
 
     if (query.length > 0)
         usersQuery
             .whereStartsWith('firstName', query)
-            .orElse()
-            .whereStartsWith('lastName', query)
-            .orElse()
-            .whereStartsWith('address.city', query)
-            .orElse()
-            .whereStartsWith('contact.instegram', query)
-            .orElse()
-            .whereStartsWith('job.title', query)
-            
-
-    if (isDescending == "true")
-        usersQuery.orderByDescending(sort)
-    else 
-        usersQuery.orderBy(sort)
         
     timer.start()
     const users = await usersQuery.all()
