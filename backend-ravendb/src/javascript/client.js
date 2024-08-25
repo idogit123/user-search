@@ -16,22 +16,11 @@ export async function getUsers(query, sort, isDescending, page) {
     const session = documentStore.openSession();
     let usersQuery = session.query({ collection: 'users' })
         .skip(PAGE_SIZE * page)
-        .take(PAGE_SIZE);
+        .take(PAGE_SIZE)
+        .addOrder(sort, isDescending);
     if (query.length > 0)
         usersQuery
-            .whereStartsWith('firstName', query)
-            .orElse()
-            .whereStartsWith('lastName', query)
-            .orElse()
-            .whereStartsWith('address.city', query)
-            .orElse()
-            .whereStartsWith('contact.instegram', query)
-            .orElse()
-            .whereStartsWith('job.title', query);
-    if (isDescending == "true")
-        usersQuery.orderByDescending(sort);
-    else
-        usersQuery.orderBy(sort);
+            .whereStartsWith('firstName', query);
     timer.start();
     const users = await usersQuery.all();
     timer.end();

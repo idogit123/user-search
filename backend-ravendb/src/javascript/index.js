@@ -10,7 +10,7 @@ app.use(cors({
     origin: process.env.APP_ORIGIN
 }));
 app.get('/users/:page', async (req, res) => {
-    const queryResult = await getUsers(req.query.query, req.query.sort, req.query.isDescending, parseInt(req.params.page));
+    const queryResult = await getUsers(req.query.query, req.query.sort, req.query.isDescending == "true", parseInt(req.params.page));
     res.status(200).send(queryResult);
 });
 app.listen(PORT, () => { console.log(`ravendb client  listening on port: ${PORT}`); });
