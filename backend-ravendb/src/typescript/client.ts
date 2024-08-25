@@ -19,14 +19,11 @@ documentStore.initialize()
 
 const timer = new Timer()
 
-export async function getUsers(query: string, sort: string, isDescending: boolean, page: number)
+export async function getUsers(query: string, sort: string, isDescending: boolean)
 {
-    const PAGE_SIZE = 10
     const session = documentStore.openSession()
 
     let usersQuery = session.query({ collection: 'users' })
-        .skip(PAGE_SIZE * page)
-        .take(PAGE_SIZE)
         .addOrder(sort, isDescending)
 
     if (query.length > 0)
