@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { createWriteStream } from 'fs'
+import { bulkInsertUsers } from './insert/mongodb.js'
 
 function createRandomUser() {
     return {
@@ -52,4 +53,14 @@ function createUsersJson(jsonPath, usersAmount)
     })
 }
 
-createUsersJson('users1.jsonl', 1_000_000)
+function createMultipleFiles(basePath, usersPerFile, fileAmount)
+{
+    for (let i=0; i < fileAmount; i++)
+    {
+        const jsonPath = `${basePath + i}.jsonl`;
+        createUsersJson(jsonPath, usersPerFile)
+        console.log('created file: ', jsonPath)
+    }
+}
+
+await bulkInsertUsers('./users/users9.jsonl')

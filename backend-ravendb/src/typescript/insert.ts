@@ -1,44 +1,47 @@
-import { DocumentStore } from "ravendb"
+import { DocumentStore, IMetadataDictionary } from "ravendb"
 import dotenv from "dotenv"
 import { User } from "./User.js"
 import { createInterface } from "readline"
 import { createReadStream } from 'fs'
 import { Timer } from "./Timer.js"
-dotenv.config()
+dotenv.config() // to access enviroment variables
 
 const documentStore = new DocumentStore(
     process.env.SERVER_ADDRESS as string,
-    process.env.DATABASE_NAME as string, 
+    process.env.DATABASE_NAME as string
 )
 documentStore.initialize()
 
-async function bulkInsertUsers()
+export async function bulkInsertUsers()
 {
+    const bulkInsert = documentStore.bulkInsert()
     const readline = createInterface({
         input: createReadStream(`${process.env.USERS_DIR}/users.jsonl`),
         crlfDelay: Infinity
     })
 
-    let counter = 0
+    let userCounter = 0
     for await (const line of readline)
     {
         const user = new User(JSON.parse(line))
+        const id = user.getId(userCounter)
 
-        const session = documentStore.openSession()
-        await session.store<User>(user, user.getId(counter))
-        await session.saveChanges()
+        if (!bulkInsert.tryStoreSync(user, id))
+        {
+            await bulkInsert.store(user, id)
+        }
 
-        counter++
+        userCounter++
     }
 
     readline.close()
+    await bulkInsert.finish()
 }
 
-const timer = new Timer()
-
+const timer = new Timer();
 timer.start()
 await bulkInsertUsers()
 timer.end()
-console.log("duration: " + timer.getDuration())
+console.log("duration:", timer.getDuration());
 
-documentStore.dispose() 
+documentStore.dispose()
