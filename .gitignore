@@ -1,3 +1,1 @@
-
-/backend-mongodb/src/javascript
-/backend-mongodb/src/javascript/*.js
+*.js
