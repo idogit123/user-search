@@ -1,8 +1,3 @@
 
 /backend-mongodb/src/javascript
-backend-mongodb/src/javascript/client.js
-backend-mongodb/src/javascript/index.js
-backend-mongodb/src/javascript/insert.js
-backend-ravendb/src/javascript/client.js
-backend-ravendb/src/javascript/index.js
-backend-ravendb/src/javascript/insert.js
+/backend-mongodb/src/javascript/*.js
