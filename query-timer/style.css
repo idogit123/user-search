@@ -3,13 +3,20 @@
     --dark-grey: #181818;
     --grey: #1f1f1f;
     --light-grey: #4d4d4d;
-    --accent-blue: #0078d4;
+    --raven-blue: #0078d4;
+    --mongo-green: #00ed64;
     --text: #dddddd;
 }
 
 body {
+    margin: 0;
+    padding: 1rem;
     background-color: var(--dark-grey);
     color: var(--text);
+    height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 }
 
 #input-section {
@@ -27,11 +34,11 @@ button {
 }
 
 button:hover {
-    color: var(--accent-blue);
+    color: var(--raven-blue);
 }
 
 button:active {
-    background-color: var(--accent-blue);
+    background-color: var(--raven-blue);
     color: var(--text);
 }
 
@@ -47,10 +54,48 @@ input {
 }
 
 input:focus {
-    outline: var(--accent-blue) solid 1px;
+    outline: var(--raven-blue) solid 1px;
 }
 
 #timer-section {
+    height: 100%;
     display: flex;
     justify-content: space-around;
+    align-items: center;
+}
+
+.timer-container {
+    background-color: var(--grey);
+    padding: 1rem;
+    border-radius: .5rem;
+    width: 30%;
+}
+
+.timer-container[data-db="raven"] {
+    --accent-color: var(--raven-blue);
+}
+
+.timer-container[data-db="mongo"] {
+    --accent-color: var(--mongo-green);
+}
+
+.timer-container h1 {
+    margin: 0;
+    margin-bottom: 1rem;
+    color: var(--accent-color);
+    font-size: 2rem;
+}
+
+.timer-container p {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.timer-container p:first-of-type {
+    margin-bottom: .5rem;
+}
+
+.timer {
+    font-weight: bold;
+    color: var(--accent-color);
 }

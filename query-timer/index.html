@@ -11,19 +11,21 @@
 <body>
     <section id="input-section">
         <input type="search" placeholder="Search user" onblur="executeQuery()" id="queryInput">
-        <button onclick="executeQuery()">Search</button>
     </section>
     <section id="timer-section">
-        <div>
+        <div class="timer-container" data-db="raven">
             <h1>RavenDB</h1>
-            <p id="raven-timer"></p>
+            <p>Duration: <span class="timer"></span>ms</p>
+            <p>User: <span class="user"></span></p>
         </div>
-        <div>
+        <div class="timer-container" data-db="mongo">
             <h1>MongoDB</h1>
-            <p id="mongo-timer"></p>
+            <p>Duration: <span class="timer"></span>ms</p>
+            <p>User: <span class="user"></span></p>
         </div>
     </section>
 </body>
 
+<script src="confetti.js"></script>
 <script src="script.js"></script>
 </html>

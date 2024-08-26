@@ -7,7 +7,7 @@ const PORT = process.env.API_PORT; // how to make it ready for production withou
 const app = express();
 app.use(express.json());
 app.use(cors({
-    origin: process.env.APP_ORIGIN
+    origin: "*"
 }));
 app.get('/users/:page', async (req, res) => {
     const queryResult = await getUsers(req.query.query, req.query.sort, req.query.isDescending == "true", parseInt(req.params.page));
