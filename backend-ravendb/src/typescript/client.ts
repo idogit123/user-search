@@ -25,9 +25,9 @@ export async function getUsers(query: string, sort: string, isDescending: boolea
     const session = documentStore.openSession()
 
     let usersQuery = session.query({ collection: 'users' })
+        .addOrder(sort, isDescending)
         .skip(PAGE_SIZE * page)
         .take(PAGE_SIZE)
-        .addOrder(sort, isDescending)
 
     if (query.length > 0)
         usersQuery
