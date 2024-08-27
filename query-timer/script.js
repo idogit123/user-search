@@ -23,7 +23,7 @@ async function queryDatabase(api_port, database_name, query) {
     const container = document.querySelector(`.timer-container[data-db=${database_name}]`)
     container.style = "border: 1px solid var(--accent-color);"
     
-    container.querySelector(".timer").innerText = result.durationInMs
+    container.querySelector(".timer").innerText = result.durationInMs.toLocaleString()
     container.querySelector(".user").innerText = result.users[0].firstName
 
     confetti.start(0, 0, 150, dbColors[database_name])
